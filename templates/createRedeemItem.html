@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Home {% endblock %}
+
+{% block content %}
+<h1 class="display-4">Add Redeem Item</h1>
+
+{% from "includes/_formHelper.html" import render_field %}
+<form action="" method="POST">
+    {{form.hidden_tag()}}
+
+    <div class="form-group pb-3">
+        {{render_field(form.name, class="form-control")}}
+    </div>
+    <div class="form-group pb-3">
+        {{render_field(form.quantity_available, class="form-control")}}
+    </div>
+    <div class="form-group pb-3">
+        {{render_field(form.point_required, class="form-control")}}
+    </div>
+    <div class="form-group pb-3">
+        {{render_field(form.filename, class="form-control")}}
+    </div>
+
+    {{form.submit(class="btn btn-secondary")}}
+</form>
+{% endblock %}
