@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='CSS/base.css') }}">{% endblock %}
+{% block title %}Account Detail{% endblock %}
+
+{% block content %}
+<div class="cs_sidebar">
+  <a class="active" href="#account_detail">Account Details</a>
+  <a href="#news">Vouchers</a>
+  <a href="/redemption_history">Redemption History</a>
+  <a href="/recycle_history">Recycle History</a>
+  <a href="#about">Log Out</a>
+</div>
+
+<div class='user_forms account_detail_form' style="min-height: 435px;">
+    <div class="user_forms_bg">
+    {% from "includes/_formHelper.html" import render_field %}
+        <h1>Account Detail</h1>
+        <form method="POST" action="/">
+            <div class="user_forms_group">
+                {{ render_field(form.email, class="user_forms_control capitalize") }}
+            </div>
+            <div class="form-group">
+                <a href="/reset_password" class="reset_password_link">
+                    <div class="reset_password_button">
+                    <div>Reset Password</div>
+                    <div>&rarr; </div>
+                    </div>
+                </a>
+            </div>
+            <input type="submit" value="Save Changes" class="user_forms_button btn-primary"/>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
