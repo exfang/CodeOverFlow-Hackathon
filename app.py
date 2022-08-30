@@ -7,5 +7,9 @@ app.secret_key = 'any_random_string'
 def home():
     return render_template("home.html")
 
+@app.route('/redeem')
+def redeem():
+    return render_template("redeem.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
