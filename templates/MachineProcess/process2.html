@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Home {% endblock %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/process.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container-sm col-lg-6 ml-auto">
+    <h1 class="text-center">CC</h1>
+    <h3 class="text-center">Recycle</h3>
+    <h4 class="text-center">Drop your recycle item in the bin</h4>
+    <br>
+    <form action="" class="" method="POST">
+        
+        <div class="form-group pb-3 d-flex justify-content-center">
+            <button class="btn button-color btn-outline-light w-50">Complete</button>
+        </div>
+    </form>
+    <div class="pr-2 pt-2 pl-2 rounded shadow mb-5">
+    <table class="table">
+        <thead class="thead-green">
+          <tr>
+            <th scope="col">Recycle Material</th>
+            <th scope="col">Weight</th>
+            <th scope="col">Points Collected</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+  
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+      
+    
+
+
+</div>
+
+
+
+{% endblock %}
