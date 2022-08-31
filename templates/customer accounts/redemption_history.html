@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='CSS/base.css') }}">{% endblock %}
+{% block title %}Redemption History{% endblock %}
+
+{% block content %}
+<div class="cs_sidebar">
+    <a href="/account_detail">Account Details</a>
+    <a href="#news">Vouchers</a>
+    <a class="active" href="/redemption_history">Redemption History</a>
+    <a href="/recycle_history">Recycle History</a>
+    <button type="button" class="logout_btn" data-toggle="modal" data-target="#logout">
+        <a>Log Out</a>
+    </button>
+    <!-- The Modal -->
+    <div class="modal" id="logout">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="staff-modal-title">Log Out</h4>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Are you sure you want to log out?
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <a href="/logout" class="btn btn-secondary logout_model_button">Log Out</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class='customer_history' style="min-height: 450px;">
+    <h1>Redemption History</h1>
+    <div>
+      {% if count == 1 %}
+      <p>There is 1 redemption.</p>
+      {% elif count %}
+      <p>There are {{ count }} redemptions.</p>
+      {% else %}
+      <p>There are no past redemptions.</p>
+      {% endif %}
+    </div>
+
+    <div class="history_table">
+        <table class="table table-striped">
+            <thead class="table_head">
+                <tr>
+                    <th>Redeemed Item</th>
+                    <th>Date</th>
+                    <th style="width: 20%;">Points Used</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users_list %}
+                <tr class="table_row">
+                    <td>{{ user.get_first_name() }}</td>
+                    <td>{{ user.get_last_name() }}</td>
+                    <td>{{ user.get_email() }}</td>
+                </tr>
+            {% endfor %}
+<!--            <tr class="table_row">-->
+<!--                <td>Test</td>-->
+<!--                <td>Test</td>-->
+<!--                <td>Test</td>-->
+<!--            </tr>-->
+<!--            <tr class="table_row">-->
+<!--                <td>Test</td>-->
+<!--                <td>Test</td>-->
+<!--                <td>Test</td>-->
+<!--            </tr>-->
+<!--            <tr class="table_row">-->
+<!--                <td>Test</td>-->
+<!--                <td>Test</td>-->
+<!--                <td>Test</td>-->
+<!--            </tr>-->
+          </tbody>
+      </table>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -54,7 +54,7 @@ nav div ul{
 }
 
 /* Responsive */
-@media screen and (max-width: 570px) {
+@media screen and (max-width: 700px) {
     .navbar-brand{
         margin-left: 0rem;
     }
@@ -69,4 +69,316 @@ nav div ul{
     .footersocials-grid{
         width: 40%;
     }
+}
+
+
+/* Side Bar for Customer and Staff */
+/* cs - customer and staff */
+.container-fluid {
+  padding: 0;
+}
+
+.cs_sidebar {
+  width: 15rem;
+  background-color: #00917C;
+  overflow: auto;
+  position: absolute;
+  margin-top: 0.5rem;
+  height: 25rem;
+}
+
+.cs_sidebar a {
+  display: block;
+  color: white;
+  padding: 1rem;
+  text-decoration: none;
+}
+
+.cs_sidebar a.active {
+  background-color: #184D47;
+}
+
+.cs_sidebar a:hover:not(.active) {
+  background-color: #184D47;
+}
+
+div.content {
+  margin-left: 15rem;
+  padding: 1px 16px;
+  height: 400px;
+}
+
+@media screen and (max-width: 900px) {
+  .cs_sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0.5rem;
+  }
+
+  .cs_sidebar a {
+    float: left;
+    font-size: 0.8rem;
+  }
+
+  div.content {
+    margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .cs_sidebar {
+    display: block;
+  }
+
+  .cs_sidebar a {
+    text-align: center;
+    float: none;
+  }
+}
+/* End of SideNav Bar CSS */
+
+/* userForms */
+.user_forms {
+    display: flex;
+    justify-content: center;
+    color: black;
+    margin-bottom: 1rem;
+}
+
+.capitalize {
+    text-transform: None
+}
+
+.user_forms a{
+    color: black;
+}
+
+.user_forms_bg {
+    width: 50rem;
+    border-radius: 1rem;
+    padding: 2rem 0;
+}
+
+.user_forms h1, .user_forms h4{
+    text-align: center;
+    font-weight: normal;
+}
+
+.user_forms_button {
+    width: 81%;
+    border-radius: .5rem;
+    border: none;
+    margin-top: 1.5rem;
+    font-size: 1.7rem;
+    margin-left: 10%;
+    background: #00917C;
+    padding: 0.5rem 0;
+}
+
+.user_forms_button:hover {
+    background: #184D47;
+}
+
+.user_forms_control {
+    width: 90% !important;
+    display: block;
+    font-size: 1.5rem !important;
+}
+
+.user_forms_group {
+    padding-left: 10%;
+    margin: 0;
+}
+
+.user_forms_group label{
+    margin-bottom: 0;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+}
+
+.user_form_redirect {
+    text-align: center;
+    font-size: 1rem !important;
+}
+
+.user_form_forgot_password {
+    font-size: 1rem !important;
+    text-decoration: underline;
+    padding-left: 10%;
+}
+
+@media screen and (max-width: 1100px) {
+    .account_detail_form{
+         margin-left: 15%;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .account_detail_form{
+         margin-left: 0;
+    }
+}
+
+.cs_form_flash {
+    color: red;
+    font-size: 1rem;
+}
+
+.updated_design {
+    background: #CAEEC2;
+    width: 40%;
+    margin: auto;
+    border-radius:25px;
+    margin-top: 1rem;
+    margin-bottom: 0;
+    color: black;
+    text-align: center;
+}
+
+.updated_design h3{
+    font-size: 1.5rem;
+}
+/* End of forms */
+
+/* Customer Reset Password */
+.reset_password_button {
+    border: 1px solid black;
+    padding: 0rem 0.5rem;
+    display: flex;
+    width: 20rem;
+    justify-content: space-between;
+}
+
+.reset_password_link {
+    color: black;
+    font-size: 1.5rem;
+    padding-right: 1%;
+    height: 100%;
+}
+
+.reset_password_button:hover, .reset_password_button_link:hover {
+    background: #184D47;
+    color: white;
+}
+
+.user_forms_group_button {
+    display: flex;
+    padding-left: 10%;
+}
+
+
+.logout_btn {
+    width: 100%;
+    padding: 0;
+    text-align: left;
+    color: white;
+    margin-left: 0;
+    border: none;
+    background: #00917C;
+}
+
+.logout_model_button {
+    padding: 6px !important;
+}
+
+.btn:hover{
+    color: white;
+}
+
+@media screen and (max-width: 1100px) {
+    .updated_design {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .updated_design {
+        width: 70%;
+        margin-right: 14%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+  .reset_password_button {
+    width: 19rem;
+  }
+  .updated_design {
+    width: 80%;
+    margin-right: 9%;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .reset_password_button {
+    width: 15.2rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .reset_password_button {
+    width: 12.8rem;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .reset_password_button {
+    font-size: 1rem;
+    width: 9.5rem;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .reset_password_button {
+    width: 8rem;
+    font-size: 0.8rem;
+  }
+  .cs_form_flash {
+    font-size: 0.5rem;
+  }
+}
+
+/* End of Customer Reset Password */
+/* Customer History */
+.customer_history {
+    width: 60%;
+    margin-left: 25%;
+}
+
+.customer_history h1 {
+    font-weight: normal;
+    font-size: 3rem;
+}
+
+.table_head {
+    background: #0F4C81;
+    color: white;
+}
+
+.table_row {
+    background: white !important;
+}
+
+.table td, .table thead th{
+    border-top: none;
+    border-bottom: 0rem !important;
+}
+
+@media screen and (max-width: 900px) {
+  .customer_history {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .customer_history {
+    margin: 0;
+  }
+
+  .customer_history h1 {
+    font-size: 2rem;
+  }
 }
