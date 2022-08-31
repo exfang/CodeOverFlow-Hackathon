@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='CSS/base.css') }}">{% endblock %}
+{% block title %}OTP Verification{% endblock %}
+
+{% block content %}
+
+<div class='user_forms'>
+    <div class="user_forms_bg">
+    {% from "includes/_formHelper.html" import render_field %}
+        <h1>OTP Verification</h1>
+        <h4>Enter the 6 digit OTP sent to your email.</h4>
+        <form method="POST" action="/">
+            <div class="user_forms_group" style="font-size: 2rem;">
+                {{ render_field(form.otp, class="user_forms_control capitalize") }}
+            </div>
+            <input type="submit" value="Verify OTP" class="user_forms_button btn-primary"/>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
