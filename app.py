@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
 from Aboutusform import AboutusForm
+from Aboutus import Aboutus
 
 app = Flask(__name__)
 app.secret_key = 'any_random_string'
@@ -35,6 +36,11 @@ def create_contact():
 @app.route('/Community')
 def Community():
     return render_template("Community.html")
+
+@app.route('/faq')
+def faq():
+    return render_template("FAQ.html")
+
 
 
 
