@@ -237,6 +237,10 @@ div.content {
     color: black;
     text-align: center;
 }
+
+.updated_design h3{
+    font-size: 1.5rem;
+}
 /* End of forms */
 
 /* Customer Reset Password */
@@ -286,11 +290,9 @@ div.content {
 
 @media screen and (max-width: 1100px) {
     .updated_design {
-        width: 60%;
-        margin-right: 12%;
+        width: 50%;
     }
 }
-
 
 @media screen and (max-width: 900px) {
     .updated_design {
@@ -332,6 +334,9 @@ div.content {
   .reset_password_button {
     width: 8rem;
     font-size: 0.8rem;
+  }
+  .cs_form_flash {
+    font-size: 0.5rem;
   }
 }
 
