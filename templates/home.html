@@ -1,6 +1,61 @@
 {% extends "base.html" %}
 {% block title %}Home {% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/home.css')}}">
+{% endblock %}
 
 {% block content %}
-<h1 class="display-4">Statistic</h1>
+<h3>Total Amount Recycled</h3>
+<div>
+
+</div>
+<hr>
+<h3>Our Program</h3>
+<div class="program-content">
+    <div class="row my-2">
+        <img src="{{url_for('static', filename='Image/recycle-program.jpg')}}" atl="Image" class="col"></img>
+        <div class="col">
+            <h5 style="text-align: center;">Want to recycle and get rewarded??</h5>
+            National Recycling Coalition partnered with and facilitate activities between and among non-profit organizations (NGO’s), 
+            businesses, trade associations, individuals and government to maintain a prosperous and productive Singapore recycling system that is committed to 
+            the conservation of natural resources!
+            <br><br>
+            By participating in our program you'll get to win attractive gifts such as vouchers that can be used in-stores or online. Some companies that are 
+            participating with us are Grab, Shopee, Lazada and Foodpanada!
+            <br><br>
+            Earn Credits to redeem prices in 5 simple steps:
+            <ol>
+                <li>Create an account <a href="">here</a></li>
+                <li>Take all your recycleable materials and separate them into "Plastic", "Paper" and "Metal"</li>
+                <li>Bring your recycleable materials to the recycle station</li>
+                <li>Fill up the form shown on the tablet (or below) either manunally or automatically</li>
+                <li>Accumulatee credits</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<div class="program-button">
+    <button>
+         <a href="">Recycle</a>
+     </button> 
+ </div>
+<hr>
+<h3>Articles</h3>
+<div class="articles">
+    <div class="row">
+        <a href="/" class="col p-0"><img src="{{url_for('static', filename='Image/climate-change.jpeg')}}" alt="global-warming">
+        <span>What is Climate Change?</span></a>
+
+        <a href="/" class="col p-0"><img src="{{url_for('static', filename='Image/global-warming.jpg')}}" alt="global-warming">
+        <span>Article 2</span></a>            
+    </div>
+    <div class="row">
+        <a href="/" class="col p-0"><img src="{{url_for('static', filename='Image/global-warming.jpg')}}" alt="global-warming">
+        <span>Article 3</span></a>
+
+        <a href="/" class="col p-0"><img src="{{url_for('static', filename='Image/global-warming.jpg')}}" alt="global-warming">
+        <span>Article 4</span></a>            
+    </div>
+</div>
+<br>
 {% endblock %}
