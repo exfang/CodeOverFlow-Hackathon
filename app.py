@@ -5,6 +5,7 @@ from pythonFiles.customer_accounts import Login, Register, Email, OTP, ResetPass
 from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
+from random import *
 
 app = Flask(__name__)
 app.secret_key = 'any_random_string'
@@ -16,6 +17,7 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///CC.db'
 
+mail=Mail(app)
 db = SQLAlchemy(app)
 
 
@@ -24,6 +26,7 @@ class Users(db.Model):
     account_type = db.Column(db.String(10), nullable=False)
     name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
+    points = db.Column(db.Integer(), nullable=True, unique=True)
     password = db.Column(db.String(), nullable=False)
 
     def set_password(self, password):
@@ -55,6 +58,8 @@ def login():
                 session['account_type'] = 'User'
                 session['user id'] = pw_to_check.id
                 return redirect(url_for("account_detail"))
+            else:
+                flash("Wrong Password or Email address.")
         else:
             flash("Wrong Password or Email address.")
     return render_template("login and register/login.html", form=log_in)
@@ -70,11 +75,10 @@ def register():
             user.set_password(register.password.data)
             db.session.add(user)
             db.session.commit()
-        name = register.name.data
         register.email.data = ''
         register.password.data = ''
-        flash("Account created successfully!")
-        return redirect(url_for("recycle_history"))
+        session['account_updated'] = "Account Created Successfully!"
+        return redirect(url_for("login"))
     return render_template("login and register/register.html", form=register)
 
 
@@ -122,18 +126,48 @@ def recycle_history():
 @app.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
     forgot_password = Email(request.form)
+    email = forgot_password.email.data
+    session['forgot_email'] = email
+    user_detail = Users.query.filter_by(email=email).first()
+    if request.method == 'POST' and forgot_password.validate():
+        if user_detail:
+            otp = randint(100000, 999999)
+            session['otp'] = otp
+            msg = Message(subject="Climate Change Account Authentication", sender="tackleclimatechanges@gmail.com",
+                          recipients=[email])
+            msg.body = "Dear Customer, please use the code:"+str(otp)+" for your email authentication. Thank you."
+            session['otp_verification'] = f'Code sent to {email}. Please enter the code for authentication.'
+            mail.send(msg)
+            return redirect(url_for('otp_verification'))
+        else:
+            flash("Email does not exist.")
     return render_template('customer accounts/forgot_password/forgot_password.html', form=forgot_password)
 
 
 @app.route('/otp_verification', methods=['GET', 'POST'])
 def otp_verification():
     otp_verification = OTP(request.form)
+    if request.method == 'POST' and otp_verification.validate():
+        if otp_verification.otp.data == session['otp']:
+            session['authenticated'] = "Authentication successful."
+            return redirect(url_for('reset_password'))
+        else:
+            flash("Wrong OTP code.")
     return render_template('customer accounts/forgot_password/otp_verification.html', form=otp_verification)
 
 
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     reset_password = ResetPassword(request.form)
+    if request.method == 'POST' and reset_password.validate():
+        if reset_password.new_password.data == reset_password.confirm_password.data:
+            user_detail = Users.query.filter_by(email=session['forgot_email']).first()
+            user_detail.set_password(reset_password.new_password.data)
+            db.session.commit()
+            session['account_updated'] = "Account password has been updated successfully."
+            return redirect(url_for('login'))
+        else:
+            flash("Please ensure your new and confirm password is the same.")
     return render_template('customer accounts/forgot_password/reset_password.html', form=reset_password)
 
 
