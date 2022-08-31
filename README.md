@@ -74,18 +74,19 @@ How to manually commit to github:
    ```
 # Create SQL Table
 How to manually create SQL table
-1. ```command prompt
+1. To create table open Command Prompt
+   ```command prompt
    (virutal_environment_name)C:\repo_folder_path>python
    ```
-How to import db
-2. ```command prompt
+2. How to import db
+   ```command prompt
    >>> from app import db
    ```
-How to create Table
-3. ```command prompt
+3. How to create Table
+   ```command prompt
    >>> db.create_all()
    ```
-How to exit the interface
-4. ```command prompt
+4. How to exit the interface
+   ```command prompt
    >>> exit()
    ```
