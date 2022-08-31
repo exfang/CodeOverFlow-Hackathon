@@ -21,18 +21,27 @@
             </div>
             <div class="user_forms_group">
                 {{ render_field(form.confirm_password, class="user_forms_control capitalize") }}
+                {% with messages = get_flashed_messages(category_filter=["wrongpassword"]) %}
+                  {% if messages %}
+                    <div class="flash" style="color: red;">
+                    {% for message in messages %}
+                      {{ message }}
+                    {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endwith %}
             </div>
                 <input type="submit" value="Submit" class="user_forms_button btn-primary"/>
             <div class="user_form_redirect">
-<!--                {% with messages = get_flashed_messages() %}-->
-<!--                  {% if messages %}-->
-<!--                    <div class="flash" style="margin-bottom: 1rem; ">-->
-<!--                    {% for message in messages %}-->
-<!--                      {{ message }}-->
-<!--                    {% endfor %}-->
-<!--                    </div>-->
-<!--                  {% endif %}-->
-<!--                {% endwith %}-->
+                {% with messages = get_flashed_messages(category_filter=["emailexists"]) %}
+                  {% if messages %}
+                    <div class="flash" style="margin-bottom: 1rem; color: red;">
+                    {% for message in messages %}
+                      {{ message }} <a href="/login" style="text-decoration: underline;">Log In</a>.
+                    {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endwith %}
                 Already a member? <a href="/login" style="color: black; text-decoration: underline;">Log In.</a>
             </div>
         </form>

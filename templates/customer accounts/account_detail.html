@@ -6,12 +6,9 @@
 {% block content %}
 <div class="cs_sidebar">
     <a class="active" href="#account_detail">Account Details</a>
-    <a href="#news">Vouchers</a>
     <a href="/redemption_history">Redemption History</a>
     <a href="/recycle_history">Recycle History</a>
-    <button type="button" class="logout_btn" data-toggle="modal" data-target="#logout">
-        <a>Log Out</a>
-    </button>
+    <a type="button" class="logout_btn" data-toggle="modal" data-target="#logout">Log Out</a>
     <!-- The Modal -->
     <div class="modal" id="logout">
         <div class="modal-dialog">
@@ -53,14 +50,16 @@
                 {{ render_field(form.email, class="user_forms_control capitalize") }}
             </div>
             <br>
-            <div class="user_forms_group_button">
-                <a href="/reset_password" class="reset_password_link">
+            <div class="user_forms_group">
+                <a href="/account_reset_password" class="reset_password_link">
                     <div class="reset_password_button">
                     <div class="reset_password_button_link">Reset Password</div>
                     <div>&rarr;</div>
                     </div>
                 </a>
-                <a href="/reset_password" class="reset_password_link">
+            </div>
+            <div class="user_forms_group">
+                <a href="/delete_account" class="reset_password_link">
                     <div class="reset_password_button">
                     <div class="reset_password_button_link">Delete Account</div>
                     <div>&rarr;</div>

@@ -15,7 +15,11 @@
 </head>
 <body>
     {% block navbar %}
-        {% include 'includes/_navbar.html' %}
+        {% if 'account_type' in session %}
+            {% include 'includes/_navbar.html' %}
+        {% else %}
+            {% include 'includes/_guest_navbar.html' %}
+        {% endif %}
     {% endblock %}
 
     <div class="container-fluid">
