@@ -9,7 +9,7 @@
     <div class="user_forms_bg">
     {% from "includes/_formHelper.html" import render_field %}
         <h1>Account Login</h1>
-        <form method="POST" action="/">
+        <form method="POST">
             <div class="user_forms_group">
                 {{ render_field(form.email, class="user_forms_control capitalize") }}
             </div>
@@ -21,15 +21,15 @@
             </div>
                 <input type="submit" value="Submit" class="user_forms_button btn-primary"/>
             <div class="user_form_redirect">
-<!--                {% with messages = get_flashed_messages() %}-->
-<!--                  {% if messages %}-->
-<!--                    <div class="flash" style="margin-bottom: 1rem; ">-->
-<!--                    {% for message in messages %}-->
-<!--                      {{ message }}-->
-<!--                    {% endfor %}-->
-<!--                    </div>-->
-<!--                  {% endif %}-->
-<!--                {% endwith %}-->
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="cs_form_flash" style="margin-bottom: 1rem; ">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
                 Not a member? <a href="/register" style="text-decoration: underline;">Register Now.</a>
             </div>
         </form>

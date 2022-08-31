@@ -5,11 +5,33 @@
 
 {% block content %}
 <div class="cs_sidebar">
-  <a href="/account_detail">Account Details</a>
-  <a href="#news">Vouchers</a>
-  <a class="active" href="/redemption_history">Redemption History</a>
-  <a href="/recycle_history">Recycle History</a>
-  <a href="#about">Log Out</a>
+    <a href="/account_detail">Account Details</a>
+    <a href="#news">Vouchers</a>
+    <a class="active" href="/redemption_history">Redemption History</a>
+    <a href="/recycle_history">Recycle History</a>
+    <button type="button" class="logout_btn" data-toggle="modal" data-target="#logout">
+        <a>Log Out</a>
+    </button>
+    <!-- The Modal -->
+    <div class="modal" id="logout">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="staff-modal-title">Log Out</h4>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Are you sure you want to log out?
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <a href="/logout" class="btn btn-secondary logout_model_button">Log Out</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 

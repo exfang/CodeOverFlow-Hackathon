@@ -5,29 +5,69 @@
 
 {% block content %}
 <div class="cs_sidebar">
-  <a class="active" href="#account_detail">Account Details</a>
-  <a href="#news">Vouchers</a>
-  <a href="/redemption_history">Redemption History</a>
-  <a href="/recycle_history">Recycle History</a>
-  <a href="#about">Log Out</a>
+    <a class="active" href="#account_detail">Account Details</a>
+    <a href="#news">Vouchers</a>
+    <a href="/redemption_history">Redemption History</a>
+    <a href="/recycle_history">Recycle History</a>
+    <button type="button" class="logout_btn" data-toggle="modal" data-target="#logout">
+        <a>Log Out</a>
+    </button>
+    <!-- The Modal -->
+    <div class="modal" id="logout">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="staff-modal-title">Log Out</h4>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Are you sure you want to log out?
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <a href="/logout" class="btn btn-secondary logout_model_button">Log Out</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+{% if 'account_updated' in session %}
+    <div class="alert updated_design">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h3>{{ session.pop('account_updated', None) }}</h3>
+    </div>
+{% endif %}
+
 <div class='user_forms account_detail_form' style="min-height: 435px;">
-    <div class="user_forms_bg">
+    <div class="user_forms_bg" style="padding-top: 1rem;">
     {% from "includes/_formHelper.html" import render_field %}
-        <h1>Account Detail</h1>
-        <form method="POST" action="/">
+        <h1 style="text-align:left; margin-left: 10%;">Account Detail</h1>
+        <form method="POST">
+            <div class="user_forms_group">
+                {{ render_field(form.name, class="user_forms_control capitalize") }}
+            </div>
             <div class="user_forms_group">
                 {{ render_field(form.email, class="user_forms_control capitalize") }}
             </div>
-            <div class="form-group">
+            <br>
+            <div class="user_forms_group_button">
                 <a href="/reset_password" class="reset_password_link">
                     <div class="reset_password_button">
-                    <div>Reset Password</div>
-                    <div>&rarr; </div>
+                    <div class="reset_password_button_link">Reset Password</div>
+                    <div>&rarr;</div>
+                    </div>
+                </a>
+                <a href="/reset_password" class="reset_password_link">
+                    <div class="reset_password_button">
+                    <div class="reset_password_button_link">Delete Account</div>
+                    <div>&rarr;</div>
                     </div>
                 </a>
             </div>
+
             <input type="submit" value="Save Changes" class="user_forms_button btn-primary"/>
         </form>
     </div>

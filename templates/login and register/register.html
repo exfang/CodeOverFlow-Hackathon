@@ -9,7 +9,10 @@
     <div class="user_forms_bg">
     {% from "includes/_formHelper.html" import render_field %}
         <h1>Account Registration</h1>
-        <form method="POST" action="/">
+        <form method="POST">
+            <div class="user_forms_group">
+                {{ render_field(form.name, class="user_forms_control capitalize") }}
+            </div>
             <div class="user_forms_group">
                 {{ render_field(form.email, class="user_forms_control capitalize") }}
             </div>
