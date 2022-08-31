@@ -21,8 +21,9 @@ class UpdateDetail(Form):
     name = StringField('Name', [validators.Length(min=1, max=150), validators.DataRequired()])
     email = EmailField('Email', [validators.Length(min=5, max=150), validators.DataRequired(), validators.Email(message="Invalid Email")])
 
+
 class OTP(Form):
-    otp = IntegerField('OTP‎ ‎ ‎ ‎ ‎ ', [validators.Length(min=6, max=6), validators.DataRequired()])
+    otp = IntegerField('OTP‎ ‎ ‎ ‎ ‎ ', [validators.NumberRange(min=100000, max=999999), validators.DataRequired()])
 
 
 class ResetPassword(Form):

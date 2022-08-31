@@ -4,15 +4,29 @@
 {% block title %}OTP Verification{% endblock %}
 
 {% block content %}
-
+{% if 'otp_verification' in session %}
+    <div class="alert updated_design">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h3>{{ session.pop('otp_verification', None) }}</h3>
+    </div>
+{% endif %}
 <div class='user_forms'>
     <div class="user_forms_bg">
     {% from "includes/_formHelper.html" import render_field %}
         <h1>OTP Verification</h1>
         <h4>Enter the 6 digit OTP sent to your email.</h4>
-        <form method="POST" action="/">
+        <form method="POST">
             <div class="user_forms_group" style="font-size: 2rem;">
                 {{ render_field(form.otp, class="user_forms_control capitalize") }}
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="cs_form_flash" style="margin-bottom: 1rem; ">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
             </div>
             <input type="submit" value="Verify OTP" class="user_forms_button btn-primary"/>
         </form>
