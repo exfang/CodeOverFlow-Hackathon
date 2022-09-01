@@ -1,5 +1,4 @@
 from Aboutusform import AboutusForm
-from Aboutus import Aboutus
 
 import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -74,10 +73,15 @@ def create_contact():
 
         contact = ContactUs(name = create_contact_form.name.data,   
                             email = create_contact_form.email.data,
-                            message = create_contact_form.remarks.data
+                            message = create_contact_form.remarks.data,
                             replies = create_contact_form.remarks.data)
 
+        db.session.add(contact)
+        db.session.commit()
+
+        flash("Message added Successfully")
         return redirect(url_for('home'))
+
     return render_template('Aboutus.html', form=create_contact_form)
 
 # Rawtbhik Community Page
