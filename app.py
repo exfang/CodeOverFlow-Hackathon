@@ -18,8 +18,8 @@ import json
 app = Flask(__name__)
 app.config["MAIL_SERVER"] = 'smtp.gmail.com'
 app.config["MAIL_PORT"] = 465
-app.config["MAIL_USERNAME"] = 'combatclimatechangetoday@gmail.com'
-app.config['MAIL_PASSWORD'] = 'mspjwywbaehiyxtz'
+app.config["MAIL_USERNAME"] = 'combatingclimatechanges@gmail.com'
+app.config['MAIL_PASSWORD'] = 'qzarzlvnezgzrmmc'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///CC.db'
@@ -351,27 +351,6 @@ def account_detail():
     return render_template("customer accounts/account_detail.html", form=updateUser)
 
 
-# Andrew - User redemption history
-@app.route('/redemption_history')
-def redemption_history():
-    if session['account_type'] == "Guest":
-        return redirect(url_for('home'))
-    elif session['account_type'] == "Staff":
-        return redirect(url_for('home'))
-    return render_template('customer accounts/redemption_history.html')
-
-
-# Andrew - User recycle history
-@app.route('/recycle_history', methods=['GET', 'POST'])
-def recycle_history():
-    if session['account_type'] == "Guest":
-        return redirect(url_for('home'))
-    elif session['account_type'] == "Staff":
-        return redirect(url_for('home'))
-    users = Users.query.order_by(Users.id)
-    return render_template('customer accounts/recycle_history.html', users=users)
-
-
 # Andrew - Guest Forgot Password
 @app.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
@@ -422,20 +401,17 @@ def otp_verification():
 # Andrew - Guest reset password
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
-    if 'authenticated' not in session:
-        return redirect(url_for('home'))
     reset_password = ResetPassword(request.form)
+    if session['user_type'] == 'User' or session['account_type'] == 'User':
+        user_detail = Users.query.filter_by(email=session['reset_email']).first()
+    else:
+        user_detail = Staffs.query.filter_by(email=session['reset_email']).first()
+
     if request.method == 'POST' and reset_password.validate():
         if reset_password.new_password.data == reset_password.confirm_password.data:
-            if session['user_type'] == 'User':
-                user_detail = Users.query.filter_by(email=session['reset_email']).first()
-            else:
-                user_detail = Staffs.query.filter_by(email=session['reset_email']).first()
             user_detail.set_password(reset_password.new_password.data)
             db.session.commit()
             session['account_updated'] = "Account password has been updated successfully."
-            session.pop('authenticated')
-            session.pop('user_type')
             if 'account_reset_password' in session:
                 return redirect(url_for('account_detail'))
             else:
@@ -454,10 +430,13 @@ def account_reset_password():
     password = account_reset_password.password.data
     if session['account_type'] == "User":
         user_detail = Users.query.filter_by(id=session['user id']).first()
+        session['user_type'] = 'User'
     else:
         user_detail = Staffs.query.filter_by(id=session['user id']).first()
-    email = user_detail.email
+        session['user_type'] = 'Staff'
+
     if request.method == 'POST' and account_reset_password.validate():
+        email = user_detail.email
         check = check_password_hash(user_detail.password, password)
         if check:
             otp = randint(100000, 999999)
@@ -467,8 +446,8 @@ def account_reset_password():
             msg.body = "Dear User, please use the code:"+str(otp)+" for your email authentication. Thank you."
             session['otp_verification'] = f'Code sent to {email}. Please enter the code for authentication.'
             mail.send(msg)
-            session['account_reset_password'] = True
-            session['reset_email'] = user_detail.email
+            session['account_reset_password'] = "True"
+            session['reset_email'] = email
             return redirect(url_for('otp_verification'))
         else:
             flash("Wrong Password.")
@@ -600,6 +579,7 @@ def update_redeem_item(id):
         update_form.itemImage.data= our_items.itemImage
 
     return render_template("createRedeemItem.html", form = update_form)
+
 
 @app.route('/deleteRedeem/<int:id>', methods=['GET', 'POST'])
 def delete_redeem(id):
