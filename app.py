@@ -1,5 +1,5 @@
 
-from wtforms import Form, validators, StringField, IntegerField,SelectField, DateField, FileField, FloatField,FieldList, FormField, SubmitField
+from wtforms import Form, validators, StringField, IntegerField,SelectField, DateField, FileField, FloatField,FieldList, FormField, SubmitField, TextAreaField
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g
@@ -8,8 +8,7 @@ from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 from random import *
-from Aboutusform import AboutusForm
-from Aboutus import Aboutus
+
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import CombinedMultiDict
 import os
@@ -115,6 +114,13 @@ class RecycledItem(db.Model):
             point = 5 * self.weight
         return point
 
+class ContactUs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    remarks = db.Column(db.Text, nullable=False)
+    replies = db.Column(db.Text, nullable=False)
+    
 class air_pollution_SG(db.Model):
     id = db.Column('row_id', db.Integer, primary_key = True)
     Year = db.Column(db.String(4), nullable = False, unique = True)
@@ -183,6 +189,12 @@ class RecycleForm(Form):
     items = FieldList(
         FormField(RecycleItemForm), min_entries=1
 )
+    
+class AboutUsForm(Form):
+    name = StringField('Name', [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = StringField('Email',[validators.Email(), validators.DataRequired()])
+    remarks = TextAreaField('Message', [validators.DataRequired()],default='')
+    replies = TextAreaField('Answer', [validators.DataRequired()],default='-')
 
 
 user_log = []
@@ -238,36 +250,7 @@ def home():
                             overall = json.dumps(overall_list)
                         )
 
-@app.route('/Aboutus')
-def create_contact():
-    create_contact_form = AboutusForm(request.form)
-    if request.method == 'POST' and create_contact_form.validate():
-        contact_dict = {}
-        db = SQLAlchemy.open('storage.db', 'c')
 
-        try:
-            contact_dict = db['Aboutus']
-        except:
-            print("Error in retrieving Users from storage.db.")
-
-        contact = Aboutus.Aboutus(create_contact_form.name.data,
-                               create_contact_form.email.data,
-                               create_contact_form.remarks.data)
-
-        contact_dict[contact.get_qn_id()] =contact
-        db['Aboutus'] = contact_dict
-
-
-        return redirect(url_for('home'))
-    return render_template('Aboutus.html', form=create_contact_form)
-
-@app.route('/Community')
-def Community():
-    return render_template("Community.html")
-
-@app.route('/faq')
-def faq():
-    return render_template("FAQ.html")
 
 
 # Andrew - Login
@@ -687,6 +670,84 @@ def process3(id):
 
     
     return render_template("MachineProcess/process3.html", recycled_items = recycled_items, i = i, total_point = total_point)
+
+# rawtbhik About us page's contact us section
+@app.route('/Aboutus', methods=['GET', 'POST'])
+def create_contact():
+    create_contact_form = AboutUsForm(request.form)
+    if request.method == 'POST' and create_contact_form.validate():
+
+        contact = ContactUs(name = create_contact_form.name.data,   
+                            email = create_contact_form.email.data,
+                            remarks = create_contact_form.remarks.data,
+                            replies = create_contact_form.replies.data)
+
+        db.session.add(contact)
+        db.session.commit()
+
+        flash("Message added Successfully")
+        return redirect(url_for('faq'))
+
+    return render_template('AboutUs.html', form=create_contact_form)
+
+# rawtbhik Retrieve Contact Page's Edit Button
+@app.route('/EditMessage/<int:id>', methods=['GET', 'POST'])
+def edit_message(id):
+    update_contact_form = AboutUsForm(request.form)
+    if request.method == 'POST' and update_contact_form.validate():
+
+        our_items = ContactUs.query.filter_by(id = id).first()
+        our_items.name = update_contact_form.name.data
+        our_items.email = update_contact_form.email.data
+        our_items.remarks = update_contact_form.remarks.data
+        our_items.replies = update_contact_form.replies.data
+
+        db.session.commit()
+        return redirect(url_for('faq'))
+    else:
+        our_items = ContactUs.query.filter_by(id = id).first()
+        update_contact_form.name.data = our_items.name
+        update_contact_form.email.data = our_items.email
+        update_contact_form.remarks.data = our_items.remarks
+        update_contact_form.replies.data= our_items.replies
+        
+    return render_template("editMessage.html", form = update_contact_form)
+
+
+# Rawtbhik Community Page
+@app.route('/Community')
+def Community():
+    return render_template("Community.html")
+
+# Rawtbhik FAQ Page
+@app.route('/faq')
+def faq():
+    user_faq = ContactUs.query.order_by(ContactUs.id)
+    return render_template("FAQ.html", user_faq = user_faq)
+    
+   
+# Rawtbhik Retrieve Contact Page
+@app.route('/RetrieveContact')
+def retrieve_contact():
+    user_messages = ContactUs.query.order_by(ContactUs.id)
+    return render_template("retrieveContact.html", user_messages = user_messages)
+
+# Rawtbhik Delete Contact 
+@app.route('/DeleteContact/<int:id>', methods=['GET', 'POST'])
+def delete_contact(id):
+    user_messages = ContactUs.query.filter_by(id = id).first()
+    try:
+        db.session.delete(user_messages)
+        db.session.commit()
+        flash('Message Deleted Successfully!!')
+
+        return redirect(url_for('retrieve_contact'))
+    except:
+        flash('Whoops! There was a problem deleting item, try again.')
+        
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
