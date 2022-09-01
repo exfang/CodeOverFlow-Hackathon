@@ -43,7 +43,7 @@ class ContactUs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     email = db.Column(db.String(200), nullable=False)
-    message = db.Column(db.Text, nullable=False)
+    remarks = db.Column(db.Text, nullable=False)
     replies = db.Column(db.Text, nullable=False)
 
 
@@ -86,25 +86,7 @@ def create_contact():
 
         contact = ContactUs(name = create_contact_form.name.data,   
                             email = create_contact_form.email.data,
-                            message = create_contact_form.remarks.data,
-                            replies = create_contact_form.replies.data)
-
-        db.session.add(contact)
-        db.session.commit()
-
-        flash("Message added Successfully")
-        return redirect(url_for('home'))
-
-    return render_template('AboutUs.html', form=create_contact_form)
-
-@app.route('/Aboutus', methods=['GET', 'POST'])
-def create_contact():
-    create_contact_form = AboutUsForm(request.form)
-    if request.method == 'POST' and create_contact_form.validate():
-
-        contact = ContactUs(name = create_contact_form.name.data,   
-                            email = create_contact_form.email.data,
-                            message = create_contact_form.remarks.data,
+                            remarks = create_contact_form.remarks.data,
                             replies = create_contact_form.replies.data)
 
         db.session.add(contact)
@@ -122,18 +104,18 @@ def edit_message(id):
 
         our_items = ContactUs.query.filter_by(id = id).first()
         our_items.name = update_contact_form.name.data
-        our_items.point_required = update_contact_form.point_required.data
-        our_items.quantity_available = update_contact_form.quantity_available.data
-        our_items.itemImage = update_contact_form.itemImage.data.filename
+        our_items.email = update_contact_form.email.data
+        our_items.remarks = update_contact_form.remarks.data
+        our_items.replies = update_contact_form.replies.data
 
         db.session.commit()
         return redirect(url_for('home'))
     else:
         our_items = ContactUs.query.filter_by(id = id).first()
         update_contact_form.name.data = our_items.name
-        update_contact_form.point_required.data = our_items.point_required
-        update_contact_form.quantity_available.data = our_items.quantity_available
-        update_contact_form.itemImage.data= our_items.itemImage
+        update_contact_form.email.data = our_items.email
+        update_contact_form.remarks.data = our_items.remarks
+        update_contact_form.replies.data= our_items.replies
         
     return render_template("editMessage.html", form = update_contact_form)
 
@@ -154,8 +136,16 @@ def retrieve_contact():
     return render_template("retrieveContact.html", user_messages = user_messages)
 
 @app.route('/DeleteContact/<int:id>')
-def retrieve_contact(id):
-    
+def delete_contact(id):
+    user_messages = ContactUs.query.filter_by(id = id).first()
+    try:
+        db.session.delete(user_messages)
+        db.session.commit()
+        flash('Item Deleted Successfully!!')
+
+        return redirect(url_for('redeem'))
+    except:
+        flash('Whoops! There was a problem deleting item, try again.')
     return render_template("retrieveContact.html", user_messages = user_messages)
 
 

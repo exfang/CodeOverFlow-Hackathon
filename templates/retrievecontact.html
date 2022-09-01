@@ -8,13 +8,13 @@
 <div class="container mt-3">
     <h1 class="pb-3">Asked Questions</h1>
 
-  <table class="table table-dark table-striped table-hover table-responsive">
+  <table class="table table-dark table-striped table-hover">
     <thead>
       <tr>
         <th>Question ID</th>
         <th>Name</th>
         <th>Email</th>
-        <th>Message</th>
+        <th>Remarks</th>
         <th>Replies</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -26,13 +26,13 @@
         <td>{{ qn.id }}</td>
         <td>{{ qn.name }}</td>
         <td>{{ qn.email }}</td> 
-        <td>{{ qn.message }}</td>
+        <td>{{ qn.remarks }}</td>
         <td>{{ qn.replies }}</td>
-        <td><a href="{{ url_for('edit_message', id=user_messages.id)}}" class="text-center btn-sm btn-dark w-100">
+        <td><a href="{{ url_for('edit_message', id=qn.id)}}" class="text-center btn-sm btn-dark w-100">
           Edit
         </a></td>
         <td>
-        <a type="button" href="{{ url_for('delete_redeem', id=user_messages.id)}}" class="text-center btn-sm btn-dark w-100">
+        <a type="button" href="{{ url_for('delete_contact', id=qn.id)}}" class="text-center btn-sm btn-dark w-100">
           Delete
         </a>
         </td>
