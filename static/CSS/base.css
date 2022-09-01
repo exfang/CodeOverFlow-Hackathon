@@ -92,6 +92,7 @@ nav div ul{
   display: block;
   color: white;
   padding: 1rem;
+  margin: 1rem 0rem;
   text-decoration: none;
 }
 
@@ -249,14 +250,15 @@ div.content {
     border: 1px solid black;
     padding: 0rem 0.5rem;
     display: flex;
-    width: 20rem;
+    width: 16rem;
     justify-content: space-between;
+    width: 90%;
 }
 
 .reset_password_link {
     color: black;
     font-size: 1.5rem;
-    padding-right: 1%;
+    padding-right: 0.5rem;
     height: 100%;
 }
 
@@ -268,12 +270,12 @@ div.content {
 .user_forms_group_button {
     display: flex;
     padding-left: 10%;
+    width: 60%;
 }
 
-
 .logout_btn {
-    width: 100%;
     padding: 0;
+    margin: 0;
     text-align: left;
     color: white;
     margin-left: 0;
@@ -282,7 +284,7 @@ div.content {
 }
 
 .logout_model_button {
-    padding: 6px !important;
+    padding: 1.5% !important;
 }
 
 .btn:hover{
@@ -303,41 +305,9 @@ div.content {
 }
 
 @media screen and (max-width: 800px) {
-  .reset_password_button {
-    width: 19rem;
-  }
   .updated_design {
     width: 80%;
     margin-right: 9%;
-  }
-}
-
-@media screen and (max-width: 700px) {
-  .reset_password_button {
-    width: 15.2rem;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .reset_password_button {
-    width: 12.8rem;
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .reset_password_button {
-    font-size: 1rem;
-    width: 9.5rem;
-  }
-}
-
-@media screen and (max-width: 320px) {
-  .reset_password_button {
-    width: 8rem;
-    font-size: 0.8rem;
-  }
-  .cs_form_flash {
-    font-size: 0.5rem;
   }
 }
 
@@ -382,4 +352,24 @@ div.content {
   .customer_history h1 {
     font-size: 2rem;
   }
+}
+
+.confirm_deletion_details ul{
+    padding-left: 3%;
+}
+
+.confirm_deletion_details ul li{
+    list-style-type: none;
+    font-size: 1.5rem;
+}
+
+.confirm_deletion_button{
+    border: 1px solid black;
+    padding: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.confirm_deletion_button:hover{
+    color: white;
+    background: #184D47;
 }

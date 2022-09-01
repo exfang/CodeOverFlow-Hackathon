@@ -29,3 +29,7 @@ class OTP(Form):
 class ResetPassword(Form):
     new_password = PasswordField('New Password', [validators.Length(min=8, max=150), validators.DataRequired()])
     confirm_password = PasswordField('Confirm Password', [validators.Length(min=8, max=150), validators.DataRequired()])
+
+
+class CurrentPassword(Form):
+    password = PasswordField('Current Password', [validators.Length(min=8, max=150), validators.DataRequired()])
