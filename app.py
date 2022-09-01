@@ -204,7 +204,7 @@ def process3(id):
         store_point.append(point.calculate_points)
 
     total_point = "{:.0f}".format(sum(store_point))
-    
+
     
     return render_template("MachineProcess/process3.html", recycled_items = recycled_items, i = i, total_point = total_point)
 

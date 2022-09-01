@@ -24,6 +24,7 @@
         <table class="table">
             <thead class="thead-green">
               <tr class="text-center">
+                <th scope="col">ID</th>
                 <th scope="col">Recycle Material</th>
                 <th scope="col">Weight(g)</th>
                 <th scope="col">Points Collected</th>
@@ -32,7 +33,7 @@
             <tbody>
               {% for recycled_item in recycled_items%}
               <tr class="text-center">
-              
+                <td>{{ recycled_item.id }}</td>
                 <td>{{ recycled_item.material }}</td>
                 <td>{{ recycled_item.weight }}</td>
                 <td>{{ i(recycled_item.material, recycled_item.weight).calculate_points}}</td>
@@ -44,7 +45,7 @@
         </div>
 
         <div class="form-group pb-3 d-flex justify-content-center">
-            <a type="button" href="{{ url_for('process1')}}" class="text-center button-color btn-outline-light w-50">Complete</a>
+            <a type="button" href="{{ url_for('process1')}}" class="btn button-color btn-outline-light w-50">Complete</a>
         </div>
 
 
