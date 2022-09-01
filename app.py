@@ -115,8 +115,8 @@ def create_contact():
 
     return render_template('AboutUs.html', form=create_contact_form)
 
-@app.route('/EditMessage', methods=['GET', 'POST'])
-def EditMessage():
+@app.route('/EditMessage/<int:id>', methods=['GET', 'POST'])
+def EditMessage(id):
     update_contact_form = AboutUsForm(request.form)
     if request.method == 'POST' and update_contact_form.validate():
 
@@ -135,7 +135,7 @@ def EditMessage():
         update_contact_form.quantity_available.data = our_items.quantity_available
         update_contact_form.itemImage.data= our_items.itemImage
         
-    return render_template("editMessage.html")
+    return render_template("editMessage.html", form = update_contact_form)
 
 
 # Rawtbhik Community Page
