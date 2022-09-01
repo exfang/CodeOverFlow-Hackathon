@@ -1,6 +1,6 @@
 
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
+
 from Aboutusform import AboutusForm
 from Aboutus import Aboutus
 
@@ -42,6 +42,14 @@ class Users(db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password, password)
 
+class ContactUs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    replies = db.Column(db.Text, nullable=False)
+
+
 
 @app.route('/')
 def home():
@@ -52,21 +60,11 @@ def home():
 def create_contact():
     create_contact_form = AboutusForm(request.form)
     if request.method == 'POST' and create_contact_form.validate():
-        contact_dict = {}
-        db = SQLAlchemy.open('storage.db', 'c')
 
-        try:
-            contact_dict = db['Aboutus']
-        except:
-            print("Error in retrieving Users from storage.db.")
-
-        contact = Aboutus.Aboutus(create_contact_form.name.data,   
-                               create_contact_form.email.data,
-                               create_contact_form.remarks.data)
-
-        contact_dict[contact.get_qn_id()] =contact
-        db['Aboutus'] = contact_dict
-
+        contact = ContactUs(name = create_contact_form.name.data,   
+                            email = create_contact_form.email.data,
+                            message = create_contact_form.remarks.data
+                            replies = create_contact_form.remarks.data)
 
         return redirect(url_for('home'))
     return render_template('Aboutus.html', form=create_contact_form)
