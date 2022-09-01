@@ -60,9 +60,12 @@ class Staffs(db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password, password)
+    
+@app.route('/')
+def home():
+    return render_template("home.html")
 
-
-# Create Form
+# Rawtbhik's Create Contact Us Form
 
 class AboutUsForm(Form):
     name = StringField('Name', [validators.Length(min=1, max=150), validators.DataRequired()])
@@ -70,13 +73,6 @@ class AboutUsForm(Form):
     remarks = TextAreaField('Message', [validators.DataRequired()],default='')
     replies = TextAreaField('Answer', [validators.DataRequired()],default='-')
 
-
-
-
-
-@app.route('/')
-def home():
-    return render_template("home.html")
 
 # rawtbhik About us page's contact us section
 @app.route('/Aboutus', methods=['GET', 'POST'])
@@ -97,6 +93,7 @@ def create_contact():
 
     return render_template('AboutUs.html', form=create_contact_form)
 
+# rawtbhik Retrieve Contact Page's Edit Button
 @app.route('/EditMessage/<int:id>', methods=['GET', 'POST'])
 def edit_message(id):
     update_contact_form = AboutUsForm(request.form)
@@ -128,13 +125,17 @@ def Community():
 # Rawtbhik FAQ Page
 @app.route('/faq')
 def faq():
-    return render_template("FAQ.html")
-
+    user_faq = ContactUs.query.order_by(ContactUs.id)
+    return render_template("FAQ.html", user_faq = user_faq)
+    
+   
+# Rawtbhik Retrieve Contact Page
 @app.route('/RetrieveContact')
 def retrieve_contact():
     user_messages = ContactUs.query.order_by(ContactUs.id)
     return render_template("retrieveContact.html", user_messages = user_messages)
 
+# Rawtbhik Delete Contact 
 @app.route('/DeleteContact/<int:id>', methods=['GET', 'POST'])
 def delete_contact(id):
     user_messages = ContactUs.query.filter_by(id = id).first()

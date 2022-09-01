@@ -22,7 +22,6 @@
 {% block content %}
 {% from "_formhelper.html" import render_field  %}
 
-
 <body id="page-top">
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 align-items-center my-5">
@@ -44,6 +43,7 @@
             </div>
             <!-- About Section Content-->
             <div class="row">
+
                 <div class="col-lg-4 ms-auto"><p class="lead">CC is a non-profit organization focused on promoting and enhancing recycling in Singapore. Our network of more than 600 members extends across waste reduction, reuse, recycling, and composting. Together, let's recycle.</p></div>
                 <div class="col-lg-4 me-auto"><p class="lead"><strong>Vision:</strong> Waste reduction and sound management practices for raw materials in Singapore lead to an environmentally sustainable economy.</p></div>
                 <div class="col-lg-4 me-auto"><p class="lead"><strong>Mission:</strong> The Mission of the National Recycling Coalition is to partner with and facilitate activities between and among non-profit organizations (NGO’s), businesses, trade associations, individuals and government to maintain a prosperous and productive Singapore recycling system that is committed to the conservation of natural resources!</p></div>
@@ -91,12 +91,12 @@
     </section>
     <br>
    <!-- Contact section-->
-   <section id="contact">
+   <section id="Contact">
     <div class="container px-4">
         <div class="row gx-4 justify-content-center">
             <div class="col-lg-8">
                 <h2>Contact Us</h2>
-                <p class="lead">Let's keep in touch! You could play a major role in combating climate change.</p>
+                <p class="lead">Let's keep in touch! You could <strong>do this form to post a question on our FAQ section</strong> too! We will be back as soon as possible with an answer you best require.</p>
                     <form action="" method="POST">
                         <div class="form-group">
                             {{ render_field(form.name, class="form-control",placeholder="Enter Name") }}

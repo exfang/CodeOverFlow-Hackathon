@@ -21,14 +21,10 @@
 
 <!-- FAQ  with 2 QNA-->
 <section class="py-5 bg-dark text-white">
+    
     <div class="container my-5">
         <div class="row justify-content-center">
-            <div class="col-lg-4">
-                <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
-                <p class="lead"><strong>A</strong> | Back in 2018</p>
-                <input type="comment" class="form-control" placeholder="Enter Comment ..." id="comment">
-            </div>
-            <div class="col-lg-4">
+            <div class="col-lg-5">
                 <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
                 <p class="lead"><strong>A</strong> | Back in 2018</p>
             </div>
@@ -37,70 +33,33 @@
 
     <div class="container my-5">
         <div class="row justify-content-center">
-            <div class="col-lg-4">
-                <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
-                <p class="lead"><strong>A</strong> | Back in 2018</p>
-            </div>
-            <div class="col-lg-4">
+            <div class="col-lg-5">
                 <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
                 <p class="lead"><strong>A</strong> | Back in 2018</p>
             </div>
         </div>
     </div>
+
+    {% for qn in user_faq %}
     <div class="container my-5">
         <div class="row justify-content-center">
-            <div class="col-lg-4">
-                <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
-                <p class="lead"><strong>A</strong> | Back in 2018</p>
+            <div class="col-lg-5">
+                <h4 class="lead"><strong>Q</strong>&nbsp| {{ qn.remarks }}</h4>
+                <p class="lead"><strong>A</strong>&nbsp| {{ qn.replies }}</p>
+                
             </div>
-            <div class="col-lg-4">
-                <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
-                <p class="lead"><strong>A</strong> | Back in 2018</p>
-            </div>
-        </div>    
+        </div>
     </div>
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-4">
-                <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
-                <p class="lead"><strong>A</strong> | Back in 2018</p>
-            </div>
-            <div class="col-lg-4">
-                <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
-                <p class="lead"><strong>A</strong> | Back in 2018</p>
-            </div>
-        </div>    
-    </div>
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-4">
-                <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
-                <p class="lead"><strong>A</strong> | Back in 2018</p>
-            </div>
-            <div class="col-lg-4">
-                <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
-                <p class="lead"><strong>A</strong> | Back in 2018</p>
-            </div>
-        </div>    
-    </div>
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-4">
-                <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
-                <p class="lead"><strong>A</strong> | Back in 2018</p>
-            </div>
-            <div class="col-lg-4">
-                <h4 class="lead"><strong>Q</strong> | When was this company founded?</h4>
-                <p class="lead"><strong>A</strong> | Back in 2018</p>
-            </div>
-        </div>    
-    </div>
+    {% endfor %}
+
+   
+
 </section>
 
 
 
 
- 
+
 
 {% endblock %}
  
