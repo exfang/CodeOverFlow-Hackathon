@@ -4,8 +4,9 @@
 {% block title %}Account Detail{% endblock %}
 
 {% block content %}
+{% if session['account_type'] == "User" %}
 <div class="cs_sidebar">
-    <a class="active" href="#account_detail">Account Details</a>
+    <a class="active" href="/account_detail">Account Details</a>
     <a href="/redemption_history">Redemption History</a>
     <a href="/recycle_history">Recycle History</a>
     <a type="button" class="logout_btn" data-toggle="modal" data-target="#logout">Log Out</a>
@@ -30,7 +31,34 @@
         </div>
     </div>
 </div>
-
+{% else %}
+<div class="cs_sidebar">
+    <a class="active" href="/account_detail">Account Details</a>
+    <a href="#">Manage Redemption Items</a>
+    <a href="/delete_customer_accounts">Manage Customer Accounts</a>
+    <a type="button" class="logout_btn" data-toggle="modal" data-target="#staff_logout">Log Out</a>
+    <!-- The Modal -->
+    <div class="modal" id="staff_logout">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="staff-modal-title">Log Out</h4>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Are you sure you want to log out?
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <a href="/logout" class="btn btn-secondary logout_model_button">Log Out</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% if 'account_updated' in session %}
     <div class="alert updated_design">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
