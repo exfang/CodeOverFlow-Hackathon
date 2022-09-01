@@ -87,7 +87,7 @@ def create_contact():
         contact = ContactUs(name = create_contact_form.name.data,   
                             email = create_contact_form.email.data,
                             message = create_contact_form.remarks.data,
-                            replies = create_contact_form.remarks.data)
+                            replies = create_contact_form.replies.data)
 
         db.session.add(contact)
         db.session.commit()
@@ -96,6 +96,33 @@ def create_contact():
         return redirect(url_for('home'))
 
     return render_template('AboutUs.html', form=create_contact_form)
+
+@app.route('/Aboutus', methods=['GET', 'POST'])
+def create_contact():
+    create_contact_form = AboutUsForm(request.form)
+    if request.method == 'POST' and create_contact_form.validate():
+
+        contact = ContactUs(name = create_contact_form.name.data,   
+                            email = create_contact_form.email.data,
+                            message = create_contact_form.remarks.data,
+                            replies = create_contact_form.replies.data)
+
+        db.session.add(contact)
+        db.session.commit()
+
+        flash("Message added Successfully")
+        return redirect(url_for('home'))
+
+    return render_template('AboutUs.html', form=create_contact_form)
+
+@app.route('/EditMessage', methods=['GET', 'POST'])
+def EditMessage():
+    update_contact_form = AboutUsForm(request.form)
+    if request.method == 'POST' and update_contact_form.validate():
+        
+        return redirect(url_for('home'))
+    return render_template("editMessage.html")
+
 
 # Rawtbhik Community Page
 @app.route('/Community')
@@ -109,8 +136,8 @@ def faq():
 
 @app.route('/RetrieveContact')
 def retrieve_contact():
-    our_items = ContactUs.query.order_by(ContactUs.date_added)
-    return render_template("retrieveContact.html")
+    user_messages = ContactUs.query.order_by(ContactUs.id)
+    return render_template("retrieveContact.html", user_messages = user_messages)
 
 
 
