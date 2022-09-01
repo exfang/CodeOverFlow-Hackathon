@@ -1,4 +1,3 @@
-
 from wtforms import Form, validators, StringField, IntegerField,SelectField, DateField, FileField, FloatField,FieldList, FormField, SubmitField, TextAreaField
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
@@ -8,7 +7,6 @@ from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 from random import *
-
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import CombinedMultiDict
 import os
