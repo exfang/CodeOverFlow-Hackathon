@@ -115,6 +115,13 @@ class RecycledItem(db.Model):
             point = 5 * self.weight
         return point
 
+class ContactUs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    remarks = db.Column(db.Text, nullable=False)
+    replies = db.Column(db.Text, nullable=False)
+    
 class air_pollution_SG(db.Model):
     id = db.Column('row_id', db.Integer, primary_key = True)
     Year = db.Column(db.String(4), nullable = False, unique = True)
@@ -183,7 +190,7 @@ class RecycleForm(Form):
     items = FieldList(
         FormField(RecycleItemForm), min_entries=1
 )
-
+    
 class AboutUsForm(Form):
     name = StringField('Name', [validators.Length(min=1, max=150), validators.DataRequired()])
     email = StringField('Email',[validators.Email(), validators.DataRequired()])
@@ -243,6 +250,37 @@ def home():
                             dates_label =json.dumps(year_list),
                             overall = json.dumps(overall_list)
                         )
+
+@app.route('/Aboutus')
+def create_contact():
+    create_contact_form = AboutusForm(request.form)
+    if request.method == 'POST' and create_contact_form.validate():
+        contact_dict = {}
+        db = SQLAlchemy.open('storage.db', 'c')
+
+        try:
+            contact_dict = db['Aboutus']
+        except:
+            print("Error in retrieving Users from storage.db.")
+
+        contact = Aboutus.Aboutus(create_contact_form.name.data,
+                               create_contact_form.email.data,
+                               create_contact_form.remarks.data)
+
+        contact_dict[contact.get_qn_id()] =contact
+        db['Aboutus'] = contact_dict
+
+
+        return redirect(url_for('home'))
+    return render_template('Aboutus.html', form=create_contact_form)
+
+@app.route('/Community')
+def Community():
+    return render_template("Community.html")
+
+@app.route('/faq')
+def faq():
+    return render_template("FAQ.html")
 
 
 # Andrew - Login
@@ -344,6 +382,27 @@ def account_detail():
     else:
         return redirect(url_for('home'))
     return render_template("customer accounts/account_detail.html", form=updateUser)
+
+
+# Andrew - User redemption history
+@app.route('/redemption_history')
+def redemption_history():
+    if session['account_type'] == "Guest":
+        return redirect(url_for('home'))
+    elif session['account_type'] == "Staff":
+        return redirect(url_for('home'))
+    return render_template('customer accounts/redemption_history.html')
+
+
+# Andrew - User recycle history
+@app.route('/recycle_history', methods=['GET', 'POST'])
+def recycle_history():
+    if session['account_type'] == "Guest":
+        return redirect(url_for('home'))
+    elif session['account_type'] == "Staff":
+        return redirect(url_for('home'))
+    users = Users.query.order_by(Users.id)
+    return render_template('customer accounts/recycle_history.html', users=users)
 
 
 # Andrew - Guest Forgot Password
@@ -609,15 +668,9 @@ def add_redeem_item(id):
 
 @app.route('/process1', methods=['GET', 'POST'])
 def process1():
-    email_form = Email(request.form)
-    if request.method == 'POST' and email_form.validate():
-        user = Users.query.filter_by(email=email_form.email.data).first()
-        if user:
-            session['user id'] = user.id
-            return redirect(url_for('process2'))
-        else:
-            flash("Email does not exist. Please ")
-    return render_template("MachineProcess/process1.html", form=email_form)
+
+    return render_template("MachineProcess/process1.html")
+
 
 
 @app.route('/process2', methods=['GET', 'POST'])
@@ -642,7 +695,7 @@ def process3(id):
     i = RecycledItem
     store_point = []
     for recycled_item in recycled_items:
-
+ 
 
         point = RecycledItem(recycled_item.material, recycled_item.weight)
 
@@ -650,7 +703,7 @@ def process3(id):
 
     total_point = "{:.0f}".format(sum(store_point))
 
-
+    
     return render_template("MachineProcess/process3.html", recycled_items = recycled_items, i = i, total_point = total_point)
 
 # rawtbhik About us page's contact us section
@@ -659,7 +712,7 @@ def create_contact():
     create_contact_form = AboutUsForm(request.form)
     if request.method == 'POST' and create_contact_form.validate():
 
-        contact = ContactUs(name = create_contact_form.name.data,
+        contact = ContactUs(name = create_contact_form.name.data,   
                             email = create_contact_form.email.data,
                             remarks = create_contact_form.remarks.data,
                             replies = create_contact_form.replies.data)
@@ -692,7 +745,7 @@ def edit_message(id):
         update_contact_form.email.data = our_items.email
         update_contact_form.remarks.data = our_items.remarks
         update_contact_form.replies.data= our_items.replies
-
+        
     return render_template("editMessage.html", form = update_contact_form)
 
 
@@ -706,15 +759,15 @@ def Community():
 def faq():
     user_faq = ContactUs.query.order_by(ContactUs.id)
     return render_template("FAQ.html", user_faq = user_faq)
-
-
+    
+   
 # Rawtbhik Retrieve Contact Page
 @app.route('/RetrieveContact')
 def retrieve_contact():
     user_messages = ContactUs.query.order_by(ContactUs.id)
     return render_template("retrieveContact.html", user_messages = user_messages)
 
-# Rawtbhik Delete Contact
+# Rawtbhik Delete Contact 
 @app.route('/DeleteContact/<int:id>', methods=['GET', 'POST'])
 def delete_contact(id):
     user_messages = ContactUs.query.filter_by(id = id).first()
@@ -726,7 +779,7 @@ def delete_contact(id):
         return redirect(url_for('retrieve_contact'))
     except:
         flash('Whoops! There was a problem deleting item, try again.')
-
+        
 
 
 
