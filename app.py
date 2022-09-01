@@ -79,7 +79,7 @@ def home():
     return render_template("home.html")
 
 # rawtbhik About us page's contact us section
-@app.route('/Aboutus')
+@app.route('/Aboutus', methods=['GET', 'POST'])
 def create_contact():
     create_contact_form = AboutUsForm(request.form)
     if request.method == 'POST' and create_contact_form.validate():
@@ -107,9 +107,10 @@ def Community():
 def faq():
     return render_template("FAQ.html")
 
-@app.route('/retrievecontact')
-def retrievecontact():
-    return render_template("retrievecontact.html")
+@app.route('/RetrieveContact')
+def retrieve_contact():
+    
+    return render_template("retrieveContact.html")
 
 
 
