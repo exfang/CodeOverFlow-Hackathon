@@ -1,6 +1,201 @@
 {% extends "base.html" %}
 {% block title %}Home {% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/home.css')}}">
+{% endblock %}
 
 {% block content %}
-<h1 class="display-4">Statistic</h1>
+<div class="content-container"  style="background-color: #00917b70;">
+    <h4>Dashboard on Current Singapore Air Pollution</h4>
+    <br>
+    <div class="statistic">
+        <div class="card card-style mb-2">
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height:30rem;">
+                    <canvas id="trend"></canvas>
+                </div>
+            </div>
+        </div>
+    
+        <div class="card card-style mb-2">
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; top:15%;">
+                    <canvas id="overall"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<h3>Our Program</h3>
+<div class="content-container program-content">
+    <div class="row my-2">
+        <img src="{{url_for('static', filename='Image/recycle-program.jpg')}}" atl="Image" class="col"></img>
+        <div class="col">
+            <h5 style="text-align: center;">Want to recycle and get rewarded??</h5>
+            National Recycling Coalition partnered with and facilitate activities between and among non-profit organizations (NGO’s), 
+            businesses, trade associations, individuals and government to maintain a prosperous and productive Singapore recycling system that is committed to 
+            the conservation of natural resources!
+            <br><br>
+            By participating in our program you'll get to win attractive gifts such as vouchers that can be used in-stores or online. Some companies that are 
+            participating with us are Grab, Shopee, Lazada and Foodpanada!
+            <br><br>
+            Earn Credits to redeem prices in 5 simple steps:
+            <ol>
+                <li>Create an account <a href="/login">here</a></li>
+                <li>Take all your recycleable materials and separate them into "Plastic", "Paper" and "Metal"</li>
+                <li>Bring your recycleable materials to the recycle station</li>
+                <li>Fill up the form shown on the tablet (or below) either manunally or automatically</li>
+                <li>Accumulate credits</li>
+            </ol>
+        </div>
+    </div>
+</div>
+<div class="program-button">
+    <button>
+         <a href="/process1">Recycle</a>
+     </button> 
+ </div>
+<hr>
+<h3>Articles</h3>
+<div class="content-container">
+    <div class="articles">
+        <a href="#" id="article1"><img src="{{url_for('static', filename='Image/climate-change.jpeg')}}" alt="global-warming">
+            <span>What is Climate Change?</span></a>
+    
+            <a href="#" id="article2"><img src="{{url_for('static', filename='Image/global-warming.jpg')}}" alt="global-warming">
+            <span>Article 2</span></a>
+            <a href="#" id="article3"><img src="{{url_for('static', filename='Image/global-warming.jpg')}}" alt="global-warming">
+            <span>Article 3</span></a>
+    
+            <a href="#" id="article4"><img src="{{url_for('static', filename='Image/global-warming.jpg')}}" alt="global-warming">
+            <span>Article 4</span></a> 
+    </div>
+</div>
+<br>
+{% block scripts %}
+<script>
+
+    let sulphur_dioxide = JSON.parse({{ sulphur_dioxide | tojson }})
+    let nitrogen_dioxide = JSON.parse({{ nitrogen_dioxide | tojson }})
+    let particulate_matter = JSON.parse({{ particulate_matter | tojson }})
+    let carbon_monoxide = JSON.parse({{ carbon_monoxide | tojson }})
+    labels = JSON.parse({{ dates_label  | tojson}})
+
+    new Chart(document.getElementById("trend"), {
+            type: "line",
+            data:
+            {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "Sulphur_Dioxide",
+                        data: sulphur_dioxide,
+                        fill: false,
+                        borderColor: '#5DA5DA',
+                        lineTension: 0.1,
+                        yAxisID: 'y',
+                    },
+                    {
+                        label: 'Nitrogen_Dioxide',
+                        data: nitrogen_dioxide,
+                        fill: false,
+                        borderColor: '#FAA43A',
+                        lineTension: 0.1,
+                     },
+                     {
+                        label: 'Particulate_Matter',
+                        data: particulate_matter,
+                        fill: false,
+                        borderColor: '#60BD68',
+                        lineTension: 0.1,
+                     },
+                     {
+                        label: 'Carbon_Monoxide',
+                        data: carbon_monoxide,
+                        fill: false,
+                        borderColor: '#B276B2',
+                        lineTension: 0.1,
+                     },
+                ]
+            },
+            options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        beginAtZero: true
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: false,
+                        position: 'right',
+                        beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Singapore's Air Pollution Trend",
+                    color: '#000',
+                    font: {
+                        size: 15,
+                    } 
+                },
+                legend: {
+                    display: true,
+                    labels: {
+                        color: 'rgb(0,0,0)'
+                    }
+                },
+            },
+        }
+    });
+
+    let overall = JSON.parse({{ overall | tojson }})
+    new Chart(document.getElementById("overall"), {
+        type: 'pie',
+        data: {
+        labels: ['Sulphur_Dioxide', 'Nitrogen_Dioxide', 'Particulate_Matter', 'Carbon_Monoxide'],
+            datasets: [{
+                data: overall,
+                backgroundColor: ['#5DA5DA ', '#FAA43A', '#60BD68',
+                    '#B276B2', '#E16851', '#FB8267'],
+            }],
+        },
+        options: {
+            maintainAspectRatio: false,
+                responsive: true,
+                interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Total Singapore's Air Pollution Over 15 Years",
+                    color: "#000",
+                    font: {
+                        size: 15,
+                    }
+                },
+                legend: {
+                    display: true,
+                    position: "right",
+                    labels: {
+                        color: 'rgb(0,0,0)'
+                    }
+                },
+            },
+        }
+    })
+</script>
+{% endblock %}
 {% endblock %}

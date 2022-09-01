@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='CSS/base.css') }}">{% endblock %}
+{% block title %}Account Detail{% endblock %}
+
+{% block content %}
+{% if session['account_type'] == "User" %}
+<div class="cs_sidebar">
+    <a class="active" href="/account_detail">Account Details</a>
+    <a href="/redemption_history">Redemption History</a>
+    <a href="/recycle_history">Recycle History</a>
+    <a type="button" class="logout_btn" data-toggle="modal" data-target="#logout">Log Out</a>
+    <!-- The Modal -->
+    <div class="modal" id="logout">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="staff-modal-title">Log Out</h4>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Are you sure you want to log out?
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <a href="/logout" class="btn btn-secondary logout_model_button">Log Out</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="cs_sidebar">
+    <a class="active" href="/account_detail">Account Details</a>
+    <a href="#">Manage Redemption Items</a>
+    <a href="/delete_customer_accounts">Manage Customer Accounts</a>
+    <a type="button" class="logout_btn" data-toggle="modal" data-target="#staff_logout">Log Out</a>
+    <!-- The Modal -->
+    <div class="modal" id="staff_logout">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="staff-modal-title">Log Out</h4>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Are you sure you want to log out?
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <a href="/logout" class="btn btn-secondary logout_model_button">Log Out</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% if 'account_updated' in session %}
+    <div class="alert updated_design">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h3>{{ session.pop('account_updated', None) }}</h3>
+    </div>
+{% endif %}
+
+<div class='user_forms account_detail_form' style="min-height: 435px;">
+    <div class="user_forms_bg" style="padding-top: 1rem;">
+    {% from "includes/_formHelper.html" import render_field %}
+        <h1 style="text-align:left; margin-left: 10%;">Account Detail</h1>
+        <form method="POST">
+            <div class="user_forms_group">
+                {{ render_field(form.name, class="user_forms_control capitalize") }}
+            </div>
+            <div class="user_forms_group">
+                {{ render_field(form.email, class="user_forms_control capitalize") }}
+            </div>
+            <br>
+            <div class="user_forms_group">
+                <a href="/account_reset_password" class="reset_password_link">
+                    <div class="reset_password_button">
+                    <div class="reset_password_button_link">Reset Password</div>
+                    <div>&rarr;</div>
+                    </div>
+                </a>
+            </div>
+            <div class="user_forms_group">
+                <a href="/delete_account" class="reset_password_link">
+                    <div class="reset_password_button">
+                    <div class="reset_password_button_link">Delete Account</div>
+                    <div>&rarr;</div>
+                    </div>
+                </a>
+            </div>
+
+            <input type="submit" value="Save Changes" class="user_forms_button btn-primary"/>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

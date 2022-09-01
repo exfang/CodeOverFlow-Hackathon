@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,10 +13,15 @@
     <!-- Include own CSS Stylesheet in the block head -->
     {% block head %}
     {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 </head>
 <body>
     {% block navbar %}
-        {% include 'includes/_navbar.html' %}
+        {% if session['account_type'] != "Guest" %}
+            {% include 'includes/_navbar.html' %}
+        {% else %}
+            {% include 'includes/_guest_navbar.html' %}
+        {% endif %}
     {% endblock %}
 
     <div class="container-fluid">

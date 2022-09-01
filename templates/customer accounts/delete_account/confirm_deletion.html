@@ -1,0 +1,32 @@
+<!-- require old password to verify, send otp, reset password -->
+{% extends "base.html" %}
+
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='CSS/base.css') }}">{% endblock %}
+{% block title %}Delete Account{% endblock %}
+
+{% block content %}
+
+<div class='user_forms'>
+    <div class="user_forms_bg">
+    {% from "includes/_formHelper.html" import render_field %}
+        <h1>Confirm Account Deletion</h1>
+        <h4 style="color: red;">This action is irreversible. Your data will be removed from the database.</h4>
+        <div class="confirm_deletion_details">
+            <ul>
+                <li>Name: {{ user.name }}</li>
+                <li>Email: {{ user.email }}</li>
+                {% if not user.points %}
+                <li>Points: 0</li>
+                {% else %}
+                <li>Points: {{ user.points }}</li>
+                {% endif %}
+            </ul>
+        </div>
+        <div style="padding-left: 3%;">
+            <a class='confirm_deletion_button' href="/delete_account_confirmed">Confirm Account Deletion</a>
+            <a class='confirm_deletion_button' href="/account_detail">Cancel</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
