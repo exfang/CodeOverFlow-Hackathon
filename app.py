@@ -533,9 +533,6 @@ def delete_account_confirmed():
 
 @app.route('/delete_customer_accounts')
 def delete_customer_accounts():
-    if session['account_type'] == "Guest" or session['account_type'] == "User":
-        return redirect(url_for('home'))
-
     users = Users.query.order_by(Users.id)
     staff = Staffs.query.order_by(Staffs.id)
     return render_template('staff/delete_accounts.html', users=users, staff=staff)
@@ -543,8 +540,6 @@ def delete_customer_accounts():
 
 @app.route('/staff_delete_accounts/<int:id>', methods=['POST'])
 def staff_delete_accounts(id):
-    if session['account_type'] == "Guest" or session['account_type'] == "User":
-        return redirect(url_for('home'))
     user_detail = Users.query.filter_by(id=id).first()
     session['account_deleted'] = user_detail.name + "'s account has been deleted successfully."
     db.session.delete(user_detail)
