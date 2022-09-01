@@ -1,7 +1,8 @@
-from Aboutusform import AboutusForm
+
 
 import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from wtforms import Form, StringField, SelectField, TextAreaField, validators
 from pythonFiles.customer_accounts import Login, Register, Email, OTP, ResetPassword, UpdateDetail, CurrentPassword
 from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
@@ -61,6 +62,18 @@ class Staffs(db.Model):
         return check_password_hash(self.password, password)
 
 
+# Create Form
+
+class AboutUsForm(Form):
+    name = StringField('Name', [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = StringField('Email',[validators.Email(), validators.DataRequired()])
+    remarks = TextAreaField('Message', [validators.DataRequired()],default='')
+    replies = TextAreaField('Answer', [validators.DataRequired()],default='-')
+
+
+
+
+
 @app.route('/')
 def home():
     return render_template("home.html")
@@ -68,7 +81,7 @@ def home():
 # rawtbhik About us page's contact us section
 @app.route('/Aboutus')
 def create_contact():
-    create_contact_form = AboutusForm(request.form)
+    create_contact_form = AboutUsForm(request.form)
     if request.method == 'POST' and create_contact_form.validate():
 
         contact = ContactUs(name = create_contact_form.name.data,   
@@ -82,7 +95,7 @@ def create_contact():
         flash("Message added Successfully")
         return redirect(url_for('home'))
 
-    return render_template('Aboutus.html', form=create_contact_form)
+    return render_template('AboutUs.html', form=create_contact_form)
 
 # Rawtbhik Community Page
 @app.route('/Community')
