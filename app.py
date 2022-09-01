@@ -250,7 +250,6 @@ def home():
 
 
 
-
 # Andrew - Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -632,7 +631,15 @@ def add_redeem_item(id):
 @app.route('/process1', methods=['GET', 'POST'])
 def process1():
 
-    return render_template("MachineProcess/process1.html")
+    email_form = Email(request.form)
+    if request.method == 'POST' and email_form.validate():
+        user = Users.query.filter_by(email=email_form.email.data).first()
+        if user:
+            session['user id'] = user.id
+            return redirect(url_for('process2'))
+        else:
+            flash("Email does not exist. Please ")
+    return render_template("MachineProcess/process1.html", form=email_form)
 
 
 
