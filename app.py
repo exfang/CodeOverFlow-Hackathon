@@ -1,5 +1,5 @@
 
-from wtforms import Form, validators, StringField, IntegerField,SelectField, DateField, FileField, FloatField,FieldList, FormField, SubmitField
+from wtforms import Form, validators, StringField, IntegerField,SelectField, DateField, FileField, FloatField,FieldList, FormField, SubmitField, TextAreaField
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g
@@ -104,7 +104,7 @@ class RecycledItem(db.Model):
     def __init__(self, material, weight):
         self.material = material
         self.weight = weight
-
+    
     @hybrid_property
     def calculate_points(self):
         if self.material == 'Paper':
@@ -183,6 +183,12 @@ class RecycleForm(Form):
     items = FieldList(
         FormField(RecycleItemForm), min_entries=1
 )
+
+class AboutUsForm(Form):
+    name = StringField('Name', [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = StringField('Email',[validators.Email(), validators.DataRequired()])
+    remarks = TextAreaField('Message', [validators.DataRequired()],default='')
+    replies = TextAreaField('Answer', [validators.DataRequired()],default='-')
 
 
 user_log = []
@@ -646,6 +652,84 @@ def process3(id):
 
 
     return render_template("MachineProcess/process3.html", recycled_items = recycled_items, i = i, total_point = total_point)
+
+# rawtbhik About us page's contact us section
+@app.route('/Aboutus', methods=['GET', 'POST'])
+def create_contact():
+    create_contact_form = AboutUsForm(request.form)
+    if request.method == 'POST' and create_contact_form.validate():
+
+        contact = ContactUs(name = create_contact_form.name.data,
+                            email = create_contact_form.email.data,
+                            remarks = create_contact_form.remarks.data,
+                            replies = create_contact_form.replies.data)
+
+        db.session.add(contact)
+        db.session.commit()
+
+        flash("Message added Successfully")
+        return redirect(url_for('faq'))
+
+    return render_template('AboutUs.html', form=create_contact_form)
+
+# rawtbhik Retrieve Contact Page's Edit Button
+@app.route('/EditMessage/<int:id>', methods=['GET', 'POST'])
+def edit_message(id):
+    update_contact_form = AboutUsForm(request.form)
+    if request.method == 'POST' and update_contact_form.validate():
+
+        our_items = ContactUs.query.filter_by(id = id).first()
+        our_items.name = update_contact_form.name.data
+        our_items.email = update_contact_form.email.data
+        our_items.remarks = update_contact_form.remarks.data
+        our_items.replies = update_contact_form.replies.data
+
+        db.session.commit()
+        return redirect(url_for('faq'))
+    else:
+        our_items = ContactUs.query.filter_by(id = id).first()
+        update_contact_form.name.data = our_items.name
+        update_contact_form.email.data = our_items.email
+        update_contact_form.remarks.data = our_items.remarks
+        update_contact_form.replies.data= our_items.replies
+
+    return render_template("editMessage.html", form = update_contact_form)
+
+
+# Rawtbhik Community Page
+@app.route('/Community')
+def Community():
+    return render_template("Community.html")
+
+# Rawtbhik FAQ Page
+@app.route('/faq')
+def faq():
+    user_faq = ContactUs.query.order_by(ContactUs.id)
+    return render_template("FAQ.html", user_faq = user_faq)
+
+
+# Rawtbhik Retrieve Contact Page
+@app.route('/RetrieveContact')
+def retrieve_contact():
+    user_messages = ContactUs.query.order_by(ContactUs.id)
+    return render_template("retrieveContact.html", user_messages = user_messages)
+
+# Rawtbhik Delete Contact
+@app.route('/DeleteContact/<int:id>', methods=['GET', 'POST'])
+def delete_contact(id):
+    user_messages = ContactUs.query.filter_by(id = id).first()
+    try:
+        db.session.delete(user_messages)
+        db.session.commit()
+        flash('Message Deleted Successfully!!')
+
+        return redirect(url_for('retrieve_contact'))
+    except:
+        flash('Whoops! There was a problem deleting item, try again.')
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
