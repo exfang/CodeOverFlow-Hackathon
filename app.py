@@ -6,6 +6,8 @@ from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 from random import *
+import pandas as pd
+import json
 
 app = Flask(__name__)
 app.secret_key = 'any_random_string'
@@ -36,9 +38,88 @@ class Users(db.Model):
         return check_password_hash(self.password, password)
 
 
+class air_pollution_SG(db.Model):
+    id = db.Column('row_id', db.Integer, primary_key = True)
+    Year = db.Column(db.String(4), nullable = False, unique = True)
+    Sulphur_Dioxide = db.Column(db.Integer)  
+    Nitrogen_Dioxide = db.Column(db.Integer)
+    Particulate_Matter = db.Column(db.Integer)
+    Carbon_Monoxide = db.Column(db.Integer)
+
+    def __init__(self, *argv, **kwargs):
+        if argv:
+            self.Year = argv[0][0]
+            self.Sulphur_Dioxide = argv[0][1]
+            self.Nitrogen_Dioxide = argv[0][2]
+            self.Particulate_Matter = argv[0][3]
+            self.Carbon_Monoxide = argv[0][4]
+db.create_all()
+df = pd.read_csv('M890641.csv')
+keep = ['Data Series','Sulphur Dioxide (Maximum 24-Hour Mean) (Microgram Per Cubic Metre)','Nitrogen Dioxide (Annual Mean) (Microgram Per Cubic Metre)',
+'Particulate Matter (PM10) (Annual Mean) (Microgram Per Cubic Metre)','Carbon Monoxide (Maximum 1-Hour Mean) (Milligram Per Cubic Metre)']
+df = df.filter(items=keep)
+df.rename(columns={
+    'Data Series': 'Year', 
+    'Sulphur Dioxide (Maximum 24-Hour Mean) (Microgram Per Cubic Metre)': 'Sulphur_Dioxide',
+    'Nitrogen Dioxide (Annual Mean) (Microgram Per Cubic Metre)': 'Nitrogen_Dioxide',
+    'Particulate Matter (PM10) (Annual Mean) (Microgram Per Cubic Metre)': 'Particulate_Matter',
+    'Carbon Monoxide (Maximum 1-Hour Mean) (Milligram Per Cubic Metre)': 'Carbon_Monoxide',
+    }, inplace=True)
+df1 = df.values.tolist()
+
+for data in df1:
+    print(data[0])
+    exitsted = air_pollution_SG.query.filter_by(Year = data[0]).first()
+    if exitsted is None:
+        db.session.add(air_pollution_SG(data))
+        db.session.commit()
+    else:
+        print("Existsed")
+
 @app.route('/')
 def home():
-    return render_template("home.html")
+    result = db.session.query(
+        air_pollution_SG.Year, 
+        air_pollution_SG.Sulphur_Dioxide, 
+        air_pollution_SG.Nitrogen_Dioxide,
+        air_pollution_SG.Particulate_Matter,
+        air_pollution_SG.Carbon_Monoxide).group_by(air_pollution_SG.Year).order_by(air_pollution_SG.Year).all()
+    
+    overall = db.session.query(
+        db.func.sum(air_pollution_SG.Sulphur_Dioxide), 
+        db.func.sum(air_pollution_SG.Nitrogen_Dioxide), 
+        db.func.sum(air_pollution_SG.Particulate_Matter), 
+        db.func.sum(air_pollution_SG.Carbon_Monoxide)).order_by(air_pollution_SG.Year).all()
+
+
+    year_list = []
+    sd_list = []
+    nd_list = []
+    pm_list = []
+    cm_list = []
+    for years, sd, nd, pm, cm in result:
+        year = years.split('.')
+        year_list.append(year[0])
+        sd_list.append(sd)
+        nd_list.append(nd)
+        pm_list.append(pm)
+        cm_list.append(cm)
+
+    overall_list = []
+    for sum_sd, sum_nd, sum_pm, sum_cm in overall:
+        overall_list.append(sum_sd)
+        overall_list.append(sum_nd)
+        overall_list.append(sum_pm)
+        overall_list.append(sum_cm)
+
+    return render_template("home.html",
+                            sulphur_dioxide = json.dumps(sd_list),
+                            nitrogen_dioxide = json.dumps(nd_list),
+                            particulate_matter = json.dumps(pm_list),
+                            carbon_monoxide = json.dumps(cm_list),
+                            dates_label =json.dumps(year_list),
+                            overall = json.dumps(overall_list)
+                        )
 
 
 @app.route('/login', methods=['GET', 'POST'])
