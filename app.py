@@ -18,8 +18,8 @@ import json
 app = Flask(__name__)
 app.config["MAIL_SERVER"] = 'smtp.gmail.com'
 app.config["MAIL_PORT"] = 465
-app.config["MAIL_USERNAME"] = 'combatclimatechangetoday@gmail.com'
-app.config['MAIL_PASSWORD'] = 'mspjwywbaehiyxtz'
+app.config["MAIL_USERNAME"] = 'combatingclimatechanges@gmail.com'
+app.config['MAIL_PASSWORD'] = 'qzarzlvnezgzrmmc'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///CC.db'
@@ -351,25 +351,6 @@ def account_detail():
     return render_template("customer accounts/account_detail.html", form=updateUser)
 
 
-# Andrew - User redemption history
-@app.route('/redemption_history')
-def redemption_history():
-    if session['account_type'] == "Guest":
-        return redirect(url_for('home'))
-    elif session['account_type'] == "Staff":
-        return redirect(url_for('home'))
-    return render_template('customer accounts/redemption_history.html')
-
-
-# Andrew - User recycle history
-@app.route('/recycle_history', methods=['GET', 'POST'])
-def recycle_history():
-    if session['account_type'] == "Guest":
-        return redirect(url_for('home'))
-    elif session['account_type'] == "Staff":
-        return redirect(url_for('home'))
-    users = Users.query.order_by(Users.id)
-    return render_template('customer accounts/recycle_history.html', users=users)
 
 
 # Andrew - Guest Forgot Password
@@ -427,7 +408,7 @@ def reset_password():
     reset_password = ResetPassword(request.form)
     if request.method == 'POST' and reset_password.validate():
         if reset_password.new_password.data == reset_password.confirm_password.data:
-            if session['user_type'] == 'User':
+            if session['user_type'] == 'User' or session['account_type'] == 'User':
                 user_detail = Users.query.filter_by(email=session['reset_email']).first()
             else:
                 user_detail = Staffs.query.filter_by(email=session['reset_email']).first()
