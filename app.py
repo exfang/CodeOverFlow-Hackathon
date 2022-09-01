@@ -141,12 +141,12 @@ def delete_contact(id):
     try:
         db.session.delete(user_messages)
         db.session.commit()
-        flash('Item Deleted Successfully!!')
+        flash('Message Deleted Successfully!!')
 
-        return redirect(url_for('redeem'))
+        return redirect(url_for('home'))
     except:
         flash('Whoops! There was a problem deleting item, try again.')
-    return render_template("retrieveContact.html", user_messages = user_messages)
+        
 
 
 # Andrew - Login
