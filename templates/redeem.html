@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Home {% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/redeem.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="p-5 text-center">Redeem</h1>
+    <div class="d-flex justify-content-between">
+        <h2>Item Available for redeem</h2>
+        <h4>Your Points: 300Points</h4>
+    </div>
+
+    <div class="card-deck py-5">
+      {% for our_item in our_items %}
+        <div class="card">
+          <img class="img-fluid fit-image" src="{{url_for('static', filename='IMAGE/' + our_item.itemImage )}}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{our_item.name}}</h5>
+          </div>
+          <!-- <button class="btn btn-primary btn-green btn-outline-light w-100">Redeem</button> -->
+          <a href="{{ url_for('add_redeem_item', id=our_item.id)}}" class="text-center btn btn-primary btn-green btn-outline-light w-100">Redeem</a>
+          <a href="{{ url_for('update_redeem_item', id=our_item.id)}}" class="text-center btn-sm btn-dark w-100">
+            Edit
+          </a>
+          <a type="button" href="{{ url_for('delete_redeem', id=our_item.id)}}" class="text-center btn-sm btn-dark w-100">
+            Delete
+          </a>
+
+          </form>
+        
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex justify-content-center pb-5">
+      <a href="/createRedeemItem" class="btn btn-green btn-outline-light px-5 py-2">Add Item for Redemption</a>
+    </div>
+
+</div>
+{% endblock %}

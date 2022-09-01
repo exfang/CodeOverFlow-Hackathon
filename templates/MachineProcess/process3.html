@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Home {% endblock %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/process.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container-sm col-lg-6 ml-auto">
+    <h1 class="text-center">CC</h1>
+    <h3 class="text-center">Recycle</h3>
+
+    <br>
+
+    <div class="form-group pb-3">
+        
+        <h4 class="text-center pb-3">Earned: {{total_point}} Points</h4>
+        <h5 class="text-center">Great Job! You have earned another {{total_point}} Points!</h5>
+        <h5 class="text-center pb-3">Keep it up and save the earth together :)</h5>
+    </div>
+
+    <div class="pr-2 pt-2 pl-2 rounded shadow mb-5">
+        <table class="table">
+            <thead class="thead-green">
+              <tr class="text-center">
+                <th scope="col">ID</th>
+                <th scope="col">Recycle Material</th>
+                <th scope="col">Weight(g)</th>
+                <th scope="col">Points Collected</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for recycled_item in recycled_items%}
+              <tr class="text-center">
+                <td>{{ recycled_item.id }}</td>
+                <td>{{ recycled_item.material }}</td>
+                <td>{{ recycled_item.weight }}</td>
+                <td>{{ i(recycled_item.material, recycled_item.weight).calculate_points}}</td>
+              
+              </tr>
+              {% endfor%}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="form-group pb-3 d-flex justify-content-center">
+            <a type="button" href="{{ url_for('process1')}}" class="btn button-color btn-outline-light w-50">Complete</a>
+        </div>
+
+
+</div>
+
+
+
+{% endblock %}

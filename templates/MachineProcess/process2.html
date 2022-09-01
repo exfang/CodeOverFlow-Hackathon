@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Home {% endblock %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/process.css')}}">
+{% endblock %}
+
+{% from "includes/_formHelper.html" import render_field %}
+
+{% block content %}
+<div class="container-sm col-lg-6 ml-auto">
+    <h1 class="text-center">CC</h1>
+    <h3 class="text-center">Recycle</h3>
+    <h4 class="text-center">Drop your recycle item in the bin</h4>
+    <br>
+    <form action="" class="" method="POST" enctype="multipart/form-data">
+      {%for item in form.items %}
+        <div id="add-recycle-material">
+          <div class=" border-bottom pb-1" id="recycles">
+            <div class="form-group">
+              {{render_field(item.form.material, class="form-control")}}
+            </div>
+            <div class="form-group pb-2">
+              {{render_field(item.form.weight, class="form-control")}}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+        <div class="form-group pb-3 d-flex justify-content-center">
+            <button class="btn button-color btn-outline-light w-50">Complete</button>
+        </div>
+    </form>
+    <button id="add-event-field" class="btn btn-outline-primary" type="button">Add Recycle Item</button>
+
+</div>
+
+
+<script>
+  window.onload = function() {
+     let addRecycleFieldBtn = document.getElementById('add-event-field');
+     addRecycleFieldBtn.addEventListener('click', function(e){
+         e.preventDefault();
+         let allRecyclesFieldWrapper = document.getElementById('add-recycle-material');
+         let allRecyclesField = allRecyclesFieldWrapper.getElementsByTagName('input');
+         if(allRecyclesField.length > (4*5)) {
+             alert('You can  have only five seat type');
+             return;
+         }
+
+         let materialIds = []
+         for(let i = 0; i < allRecyclesField.length; i++) {
+            materialIds.push(parseInt(allRecyclesField[i].name.split('-')[1]));
+         }
+
+         let weightIds = []
+         for(let i = 0; i < allRecyclesField.length; i++) {
+          weightIds.push(parseInt(allRecyclesField[i].name.split('-')[1]));
+         }
+
+         let newRecycleItem = `items-${Math.max(...materialIds) + 1}-material`;
+
+         let newWeight = `items-${Math.max(...weightIds) + 1}-weight`;
+
+
+         allRecyclesFieldWrapper.insertAdjacentHTML('beforeend',`
+
+         <div class="pb-1 pt-2 border-bottom" id="recycles">
+            <div class="form-group">
+              <div class="form-group"><label for="${newRecycleItem}">Recycle Material</label> 
+                <select id="${newRecycleItem}" class="form-control" name="${newRecycleItem}" type="text" value="">
+                  <option value="">Paper</option>
+                  <option value="Plastic">Plastic</option>
+                  <option value="Metal">Metal</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-group"><label for="${newWeight}">Weight (gram/g)</label> <input id="${newWeight}" class="form-control" name="${newWeight}" type="text" value=""></div>
+            </div>
+          </div>
+         `);
+     });
+ }
+
+</script>
+
+{% endblock %}
