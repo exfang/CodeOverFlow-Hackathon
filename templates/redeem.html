@@ -10,7 +10,6 @@
     <h1 class="p-5 text-center">Redeem</h1>
     <div class="d-flex justify-content-between">
         <h2>Item Available for redeem</h2>
-        <h4>Your Points: 300Points</h4>
     </div>
 
     <div class="card-deck py-5">
@@ -22,22 +21,22 @@
           </div>
           <!-- <button class="btn btn-primary btn-green btn-outline-light w-100">Redeem</button> -->
           <a href="{{ url_for('add_redeem_item', id=our_item.id)}}" class="text-center btn btn-primary btn-green btn-outline-light w-100">Redeem</a>
-          <a href="{{ url_for('update_redeem_item', id=our_item.id)}}" class="text-center btn-sm btn-dark w-100">
-            Edit
-          </a>
-          <a type="button" href="{{ url_for('delete_redeem', id=our_item.id)}}" class="text-center btn-sm btn-dark w-100">
-            Delete
-          </a>
-
-          </form>
+            {% if session['account_type'] == "Staff" %}
+              <a href="{{ url_for('update_redeem_item', id=our_item.id)}}" class="text-center btn-sm btn-dark w-100">
+                Edit
+              </a>
+              <a type="button" href="{{ url_for('delete_redeem', id=our_item.id)}}" class="text-center btn-sm btn-dark w-100">
+                Delete
+              </a>
+            {% endif %}
         
         </div>
         {% endfor %}
     </div>
-
-    <div class="d-flex justify-content-center pb-5">
-      <a href="/createRedeemItem" class="btn btn-green btn-outline-light px-5 py-2">Add Item for Redemption</a>
-    </div>
-
+    {% if session['account_type'] == "Staff" %}
+        <div class="d-flex justify-content-center pb-5">
+          <a href="/createRedeemItem" class="btn btn-green btn-outline-light px-5 py-2">Add Item for Redemption</a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
