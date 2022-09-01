@@ -15,13 +15,17 @@
             <ul>
                 <li>Name: {{ user.name }}</li>
                 <li>Email: {{ user.email }}</li>
+                {% if not user.points %}
+                <li>Points: 0</li>
+                {% else %}
                 <li>Points: {{ user.points }}</li>
+                {% endif %}
             </ul>
         </div>
         <div style="padding-left: 3%;">
             <a class='confirm_deletion_button' href="/delete_account_confirmed">Confirm Account Deletion</a>
+            <a class='confirm_deletion_button' href="/account_detail">Cancel</a>
         </div>
-
     </div>
 </div>
 

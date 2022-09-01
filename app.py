@@ -3,7 +3,7 @@ from Aboutusform import AboutusForm
 from Aboutus import Aboutus
 
 import datetime
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g
 from pythonFiles.customer_accounts import Login, Register, Email, OTP, ResetPassword, UpdateDetail, CurrentPassword
 from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
@@ -15,14 +15,21 @@ app = Flask(__name__)
 app.secret_key = 'any_random_string'
 app.config["MAIL_SERVER"] = 'smtp.gmail.com'
 app.config["MAIL_PORT"] = 465
-app.config["MAIL_USERNAME"] = 'tackleclimatechanges@gmail.com'
-app.config['MAIL_PASSWORD'] = 'iaqeyqomxgwnstwi'
+app.config["MAIL_USERNAME"] = 'combatclimatechangetoday@gmail.com'
+app.config['MAIL_PASSWORD'] = 'mspjwywbaehiyxtz'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///CC.db'
 
-mail=Mail(app)
+mail = Mail(app)
 db = SQLAlchemy(app)
+
+
+@app.before_request
+def before_request():
+    g.user = None
+    if 'user id' in session:
+        g.user = session['user id']
 
 
 # Andrew - User's database
@@ -55,8 +62,24 @@ class Staffs(db.Model):
         return check_password_hash(self.password, password)
 
 
+def auto_create_staff():
+    staff_check = Staffs.query.filter_by(email='john@gmail.com').first()
+    if not staff_check:
+        staff = Staffs(account_type='Staff', name='John', email='john@gmail.com')
+        staff.set_password('staffpassw8rd')
+        db.session.add(staff)
+        db.session.commit()
+
+
+user_log = []
+
+
 @app.route('/')
 def home():
+    auto_create_staff()
+    if not user_log:
+        session.clear()
+        session['account_type'] = "Guest"
     return render_template("home.html")
 
 
@@ -92,7 +115,6 @@ def faq():
     return render_template("FAQ.html")
 
 
-
 # Andrew - Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -101,15 +123,29 @@ def login():
         email = log_in.email.data
         password = log_in.password.data
         # Query the email's password
-        pw_to_check = Users.query.filter_by(email=email).first()
-        if pw_to_check is not None:
+        user = Users.query.filter_by(email=email).first()
+        staff = Staffs.query.filter_by(email=email).first()
+        if user is not None:
             # Compare the hashed and non-hashed password
-            check = check_password_hash(pw_to_check.password, password)
+            check = check_password_hash(user.password, password)
             if check:
                 log_in.email.data = ''
                 log_in.password.data = ''
-                session['account_type'] = pw_to_check.account_type
-                session['user id'] = pw_to_check.id
+                session['account_type'] = user.account_type
+                session['user id'] = user.id
+                user_log.append('True')
+                return redirect(url_for("account_detail"))
+            else:
+                flash("Wrong Password or Email address.")
+        elif staff is not None:
+            # Compare the hashed and non-hashed password
+            check = check_password_hash(staff.password, password)
+            if check:
+                log_in.email.data = ''
+                log_in.password.data = ''
+                session['account_type'] = staff.account_type
+                session['user id'] = staff.id
+                user_log.append('True')
                 return redirect(url_for("account_detail"))
             else:
                 flash("Wrong Password or Email address.")
@@ -147,10 +183,13 @@ def register():
 @app.route('/account_detail', methods=['GET', 'POST'])
 def account_detail():
     updateUser = UpdateDetail(request.form)
-    if 'account_type' in session:
+    if session['account_type'] != "Guest":
         if request.method == 'POST' and updateUser.validate():
             # user_detail stores the user's original data
-            user_detail = Users.query.filter_by(id=session['user id']).first()
+            if session['account_type'] == 'Staff':
+                user_detail = Staffs.query.filter_by(id=session['user id']).first()
+            else:
+                user_detail = Users.query.filter_by(id=session['user id']).first()
             if updateUser.name.data != user_detail.name or updateUser.email.data != user_detail.email:
                 # user_detail.email - set the original data email to
                 # updateUser.email.data - the data the user entered (their new detail)
@@ -166,7 +205,10 @@ def account_detail():
             else:
                 session['account_updated'] = "No changes made to the account details."
         else:
-            user_detail = Users.query.filter_by(id=session['user id']).first()
+            if session['account_type'] == 'Staff':
+                user_detail = Staffs.query.filter_by(id=session['user id']).first()
+            else:
+                user_detail = Users.query.filter_by(id=session['user id']).first()
             updateUser.name.data = user_detail.name
             updateUser.email.data = user_detail.email
     else:
@@ -177,12 +219,20 @@ def account_detail():
 # Andrew - User redemption history
 @app.route('/redemption_history')
 def redemption_history():
+    if session['account_type'] == "Guest":
+        return redirect(url_for('home'))
+    elif session['account_type'] == "Staff":
+        return redirect(url_for('home'))
     return render_template('customer accounts/redemption_history.html')
 
 
 # Andrew - User recycle history
 @app.route('/recycle_history', methods=['GET', 'POST'])
 def recycle_history():
+    if session['account_type'] == "Guest":
+        return redirect(url_for('home'))
+    elif session['account_type'] == "Staff":
+        return redirect(url_for('home'))
     users = Users.query.order_by(Users.id)
     return render_template('customer accounts/recycle_history.html', users=users)
 
@@ -192,10 +242,15 @@ def recycle_history():
 def forgot_password():
     forgot_password = Email(request.form)
     email = forgot_password.email.data
-    session['reset_email'] = email
     user_detail = Users.query.filter_by(email=email).first()
+    staff_detail = Staffs.query.filter_by(email=email).first()
     if request.method == 'POST' and forgot_password.validate():
-        if user_detail:
+        if user_detail or staff_detail:
+            session['reset_email'] = email
+            if user_detail:
+                session['user_type'] = 'User'
+            else:
+                session['user_type'] = 'Staff'
             otp = randint(100000, 999999)
             session['otp'] = otp
             msg = Message(subject="Climate Change Account Authentication", sender="tackleclimatechanges@gmail.com",
@@ -212,11 +267,15 @@ def forgot_password():
 # Andrew - OTP Verification
 @app.route('/otp_verification', methods=['GET', 'POST'])
 def otp_verification():
+    if 'otp' not in session:
+        return redirect(url_for('home'))
     otp_verification = OTP(request.form)
     if request.method == 'POST' and otp_verification.validate():
         if otp_verification.otp.data == session['otp']:
             session['authenticated'] = "Authentication successful."
+            session.pop('otp')
             if 'delete_account' in session:
+                session['delete_account'] = 'True'
                 return redirect(url_for('confirm_deletion'))
             else:
                 return redirect(url_for('reset_password'))
@@ -228,13 +287,20 @@ def otp_verification():
 # Andrew - Guest reset password
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
+    if 'authenticated' not in session:
+        return redirect(url_for('home'))
     reset_password = ResetPassword(request.form)
     if request.method == 'POST' and reset_password.validate():
         if reset_password.new_password.data == reset_password.confirm_password.data:
-            user_detail = Users.query.filter_by(email=session['reset_email']).first()
+            if session['user_type'] == 'User':
+                user_detail = Users.query.filter_by(email=session['reset_email']).first()
+            else:
+                user_detail = Staffs.query.filter_by(email=session['reset_email']).first()
             user_detail.set_password(reset_password.new_password.data)
             db.session.commit()
             session['account_updated'] = "Account password has been updated successfully."
+            session.pop('authenticated')
+            session.pop('user_type')
             if 'account_reset_password' in session:
                 return redirect(url_for('account_detail'))
             else:
@@ -247,9 +313,14 @@ def reset_password():
 # Andrew - User's reset password
 @app.route('/account_reset_password', methods=['GET', 'POST'])
 def account_reset_password():
+    if session['account_type'] == "Guest":
+        return redirect(url_for('home'))
     account_reset_password = CurrentPassword(request.form)
     password = account_reset_password.password.data
-    user_detail = Users.query.filter_by(id=session['user id']).first()
+    if session['account_type'] == "User":
+        user_detail = Users.query.filter_by(id=session['user id']).first()
+    else:
+        user_detail = Staffs.query.filter_by(id=session['user id']).first()
     email = user_detail.email
     if request.method == 'POST' and account_reset_password.validate():
         check = check_password_hash(user_detail.password, password)
@@ -272,8 +343,13 @@ def account_reset_password():
 # Andrew - User's reset password
 @app.route('/delete_account', methods=['GET', 'POST'])
 def delete_account():
+    if session['account_type'] == "Guest":
+        return redirect(url_for('home'))
     delete_account = Email(request.form)
-    user_detail = Users.query.filter_by(id=session['user id']).first()
+    if session['account_type'] == "User":
+        user_detail = Users.query.filter_by(id=session['user id']).first()
+    else:
+        user_detail = Staffs.query.filter_by(id=session['user id']).first()
     email = user_detail.email
     if request.method == 'POST' and delete_account.validate():
         if delete_account.email.data == user_detail.email:
@@ -292,31 +368,55 @@ def delete_account():
     return render_template('customer accounts/delete_account/check_email.html', form=delete_account)
 
 
-# @app.route('/confirm_deletion/<int:id>')
-# def confirm_deletion():
-#
-#     return redirect(url_for('home'))
-
-
 @app.route('/confirm_deletion')
 def confirm_deletion():
-    user = Users.query.filter_by(id=session['user id']).first()
-    return render_template('customer accounts/delete_account/confirm_deletion.html', user=user)
+    if session['account_type'] == "Guest" or 'delete_account' not in session:
+        return redirect(url_for('home'))
+    if session['account_type'] == "User":
+        user_detail = Users.query.filter_by(id=session['user id']).first()
+    else:
+        user_detail = Staffs.query.filter_by(id=session['user id']).first()
+    return render_template('customer accounts/delete_account/confirm_deletion.html', user=user_detail)
 
 
 @app.route('/delete_account_confirmed')
 def delete_account_confirmed():
-    user = Users.query.filter_by(id=session['user id']).first()
-    db.session.delete(user)
+    if session['account_type'] == "Guest" or 'delete_account' not in session:
+        return redirect(url_for('home'))
+
+    if session['account_type'] == "User":
+        user_detail = Users.query.filter_by(id=session['user id']).first()
+    else:
+        user_detail = Staffs.query.filter_by(id=session['user id']).first()
+    db.session.delete(user_detail)
     db.session.commit()
     session.clear()
+    session['account_type'] = "Guest"
     session['account_updated'] = "Account has been successfully deleted."
     return redirect(url_for('login'))
+
+
+@app.route('/delete_customer_accounts')
+def delete_customer_accounts():
+    users = Users.query.order_by(Users.id)
+    staff = Staffs.query.order_by(Staffs.id)
+    return render_template('staff/delete_accounts.html', users=users, staff=staff)
+
+
+@app.route('/staff_delete_accounts/<int:id>', methods=['POST'])
+def staff_delete_accounts(id):
+    user_detail = Users.query.filter_by(id=id).first()
+    session['account_deleted'] = user_detail.name + "'s account has been deleted successfully."
+    db.session.delete(user_detail)
+    db.session.commit()
+
+    return redirect(url_for('delete_customer_accounts'))
 
 
 @app.route('/logout')
 def logout():
     session.clear()
+    session['account_type'] = "Guest"
     return render_template('home.html')
 
 

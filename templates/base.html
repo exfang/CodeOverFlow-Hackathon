@@ -15,7 +15,7 @@
 </head>
 <body>
     {% block navbar %}
-        {% if 'account_type' in session %}
+        {% if session['account_type'] != "Guest" %}
             {% include 'includes/_navbar.html' %}
         {% else %}
             {% include 'includes/_guest_navbar.html' %}
