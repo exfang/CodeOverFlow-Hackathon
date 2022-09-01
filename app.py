@@ -104,7 +104,7 @@ class RecycledItem(db.Model):
     def __init__(self, material, weight):
         self.material = material
         self.weight = weight
-    
+
     @hybrid_property
     def calculate_points(self):
         if self.material == 'Paper':
@@ -238,37 +238,6 @@ def home():
                             overall = json.dumps(overall_list)
                         )
 
-@app.route('/Aboutus')
-def create_contact():
-    create_contact_form = AboutusForm(request.form)
-    if request.method == 'POST' and create_contact_form.validate():
-        contact_dict = {}
-        db = SQLAlchemy.open('storage.db', 'c')
-
-        try:
-            contact_dict = db['Aboutus']
-        except:
-            print("Error in retrieving Users from storage.db.")
-
-        contact = Aboutus.Aboutus(create_contact_form.name.data,
-                               create_contact_form.email.data,
-                               create_contact_form.remarks.data)
-
-        contact_dict[contact.get_qn_id()] =contact
-        db['Aboutus'] = contact_dict
-
-
-        return redirect(url_for('home'))
-    return render_template('Aboutus.html', form=create_contact_form)
-
-@app.route('/Community')
-def Community():
-    return render_template("Community.html")
-
-@app.route('/faq')
-def faq():
-    return render_template("FAQ.html")
-
 
 # Andrew - Login
 @app.route('/login', methods=['GET', 'POST'])
@@ -369,27 +338,6 @@ def account_detail():
     else:
         return redirect(url_for('home'))
     return render_template("customer accounts/account_detail.html", form=updateUser)
-
-
-# Andrew - User redemption history
-@app.route('/redemption_history')
-def redemption_history():
-    if session['account_type'] == "Guest":
-        return redirect(url_for('home'))
-    elif session['account_type'] == "Staff":
-        return redirect(url_for('home'))
-    return render_template('customer accounts/redemption_history.html')
-
-
-# Andrew - User recycle history
-@app.route('/recycle_history', methods=['GET', 'POST'])
-def recycle_history():
-    if session['account_type'] == "Guest":
-        return redirect(url_for('home'))
-    elif session['account_type'] == "Staff":
-        return redirect(url_for('home'))
-    users = Users.query.order_by(Users.id)
-    return render_template('customer accounts/recycle_history.html', users=users)
 
 
 # Andrew - Guest Forgot Password
@@ -553,6 +501,9 @@ def delete_account_confirmed():
 
 @app.route('/delete_customer_accounts')
 def delete_customer_accounts():
+    if session['account_type'] == "Guest" or session['account_type'] == "User":
+        return redirect(url_for('home'))
+
     users = Users.query.order_by(Users.id)
     staff = Staffs.query.order_by(Staffs.id)
     return render_template('staff/delete_accounts.html', users=users, staff=staff)
@@ -560,6 +511,8 @@ def delete_customer_accounts():
 
 @app.route('/staff_delete_accounts/<int:id>', methods=['POST'])
 def staff_delete_accounts(id):
+    if session['account_type'] == "Guest" or session['account_type'] == "User":
+        return redirect(url_for('home'))
     user_detail = Users.query.filter_by(id=id).first()
     session['account_deleted'] = user_detail.name + "'s account has been deleted successfully."
     db.session.delete(user_detail)
@@ -650,9 +603,15 @@ def add_redeem_item(id):
 
 @app.route('/process1', methods=['GET', 'POST'])
 def process1():
-
-    return render_template("MachineProcess/process1.html")
-
+    email_form = Email(request.form)
+    if request.method == 'POST' and email_form.validate():
+        user = Users.query.filter_by(email=email_form.email.data).first()
+        if user:
+            session['user id'] = user.id
+            return redirect(url_for('process2'))
+        else:
+            flash("Email does not exist. Please ")
+    return render_template("MachineProcess/process1.html", form=email_form)
 
 
 @app.route('/process2', methods=['GET', 'POST'])
@@ -677,7 +636,7 @@ def process3(id):
     i = RecycledItem
     store_point = []
     for recycled_item in recycled_items:
- 
+
 
         point = RecycledItem(recycled_item.material, recycled_item.weight)
 
@@ -685,7 +644,7 @@ def process3(id):
 
     total_point = "{:.0f}".format(sum(store_point))
 
-    
+
     return render_template("MachineProcess/process3.html", recycled_items = recycled_items, i = i, total_point = total_point)
 
 if __name__ == "__main__":
