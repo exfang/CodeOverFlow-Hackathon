@@ -1,10 +1,5 @@
-from email.policy import default
-from tkinter.tix import Select
-from unicodedata import name
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from flask_wtf import FlaskForm
 from wtforms import Form, validators, StringField, IntegerField,SelectField, DateField, FileField, FloatField,FieldList, FormField, SubmitField
-from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
@@ -14,7 +9,7 @@ import os
 
 app = Flask(__name__)
 #Add Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///CC.db'
 app.config['UPLOAD_FOLDER'] = 'static/IMAGE'
 app.secret_key = 'any_random_string'
 #Initialize The Database
