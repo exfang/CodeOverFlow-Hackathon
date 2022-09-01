@@ -10,11 +10,11 @@
   <div>
     {% if count == 0 %}
     
-    <p>There are <strong>no</strong> questions posted.</p>
+    <p>There are <strong>no</strong> message from "Contact Us" page.</p>
     {% elif count == 1 %}
-    <p>There is <strong>1</strong> question posted.</p>
+    <p>There is <strong>1</strong> message.</p>
     {% else %}
-    <p>There are <strong>{{ count }} </strong>questions posted.</p>
+    <p>There are <strong>{{ count }} </strong>messages available.</p>
     {% endif %}
   </div>
 
@@ -24,7 +24,7 @@
         <th>Question ID</th>
         <th>Name</th>
         <th>Email</th>
-        <th>Comments</th>
+        <th>Message</th>
         <th></th>
         <th></th>
         <th></th>
