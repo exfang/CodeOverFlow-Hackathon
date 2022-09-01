@@ -351,6 +351,8 @@ def account_detail():
     return render_template("customer accounts/account_detail.html", form=updateUser)
 
 
+
+
 # Andrew - Guest Forgot Password
 @app.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
