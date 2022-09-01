@@ -59,7 +59,7 @@ class Staffs(db.Model):
 def home():
     return render_template("home.html")
 
-
+# rawtbhik About us page's contact us section
 @app.route('/Aboutus')
 def create_contact():
     create_contact_form = AboutusForm(request.form)
@@ -83,13 +83,19 @@ def create_contact():
         return redirect(url_for('home'))
     return render_template('Aboutus.html', form=create_contact_form)
 
+# Rawtbhik Community Page
 @app.route('/Community')
 def Community():
     return render_template("Community.html")
 
+# Rawtbhik FAQ Page
 @app.route('/faq')
 def faq():
     return render_template("FAQ.html")
+
+@app.route('/retrievecontact')
+def retrievecontact():
+    return render_template("retrievecontact.html")
 
 
 

@@ -6,4 +6,5 @@ class AboutusForm(Form):
     remarks = TextAreaField('Message', [validators.DataRequired()],default='')
 
     
-  
+class FAQ(Form):
+    reply = TextAreaField('Message', [validators.DataRequired()],default='')
