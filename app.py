@@ -1,4 +1,3 @@
-
 from wtforms import Form, validators, StringField, IntegerField,SelectField, DateField, FileField, FloatField,FieldList, FormField, SubmitField, TextAreaField
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
@@ -8,8 +7,6 @@ from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 from random import *
-from Aboutusform import AboutusForm
-from Aboutus import Aboutus
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import CombinedMultiDict
 import os
@@ -251,36 +248,7 @@ def home():
                             overall = json.dumps(overall_list)
                         )
 
-@app.route('/Aboutus')
-def create_contact():
-    create_contact_form = AboutusForm(request.form)
-    if request.method == 'POST' and create_contact_form.validate():
-        contact_dict = {}
-        db = SQLAlchemy.open('storage.db', 'c')
 
-        try:
-            contact_dict = db['Aboutus']
-        except:
-            print("Error in retrieving Users from storage.db.")
-
-        contact = Aboutus.Aboutus(create_contact_form.name.data,
-                               create_contact_form.email.data,
-                               create_contact_form.remarks.data)
-
-        contact_dict[contact.get_qn_id()] =contact
-        db['Aboutus'] = contact_dict
-
-
-        return redirect(url_for('home'))
-    return render_template('Aboutus.html', form=create_contact_form)
-
-@app.route('/Community')
-def Community():
-    return render_template("Community.html")
-
-@app.route('/faq')
-def faq():
-    return render_template("FAQ.html")
 
 
 # Andrew - Login
@@ -566,9 +534,6 @@ def delete_account_confirmed():
 
 @app.route('/delete_customer_accounts')
 def delete_customer_accounts():
-    if session['account_type'] == "Guest" or session['account_type'] == "User":
-        return redirect(url_for('home'))
-
     users = Users.query.order_by(Users.id)
     staff = Staffs.query.order_by(Staffs.id)
     return render_template('staff/delete_accounts.html', users=users, staff=staff)
@@ -576,8 +541,6 @@ def delete_customer_accounts():
 
 @app.route('/staff_delete_accounts/<int:id>', methods=['POST'])
 def staff_delete_accounts(id):
-    if session['account_type'] == "Guest" or session['account_type'] == "User":
-        return redirect(url_for('home'))
     user_detail = Users.query.filter_by(id=id).first()
     session['account_deleted'] = user_detail.name + "'s account has been deleted successfully."
     db.session.delete(user_detail)
