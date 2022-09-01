@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Home {% endblock %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/process.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container-sm col-lg-6 ml-auto">
+    <h1 class="text-center">CC</h1>
+    <h3 class="text-center">You had redeemed {{item_redeemed.name}}</h3>
+    <h4 class="text-center">Let's play our part to save the earth</h4>
+    <br>
+    <img class="img-fluid fit-image" src="{{url_for('static', filename='IMAGE/' + item_redeemed.itemImage )}}" class="card-img-top" alt="...">
+
+
+</div>
+
+
+
+{% endblock %}

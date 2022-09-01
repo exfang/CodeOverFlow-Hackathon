@@ -28,6 +28,15 @@ class Redeem(db.Model):
     point_required = db.Column(db.Integer)
     itemImage = db.Column(db.String(200), nullable = False, unique = True)
     quantity_available = db.Column(db.Integer)
+    redeemItem = db.relationship('RedeemedItem', backref = 'redeem', lazy = True)
+
+    def __repr__(self) -> str:
+        return 'Name %r' % self.name
+
+class RedeemedItem(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    redeemItem_id = db.Column(db.Integer, db.ForeignKey('redeem.id') , nullable = False)
 
     def __repr__(self) -> str:
         return 'Name %r' % self.name
@@ -51,11 +60,11 @@ class RecycledItem(db.Model):
     @hybrid_property
     def calculate_points(self):
         if self.material == 'Paper':
-            point = 20 * self.weight
+            point = 2 * self.weight
         elif self.material == 'Plastic':
-            point = 40 * self.weight
+            point = 4 * self.weight
         else:
-            point = 50 * self.weight
+            point = 5 * self.weight
         return point
 
 
@@ -69,6 +78,8 @@ class RedeemForm(Form):
     quantity_available = IntegerField('Quantity Available', [validators.NumberRange(min=1, max=100000), validators.DataRequired()])
     itemImage = FileField('Image')
 
+
+
 class RecycleItemForm(Form):
     material = SelectField('Recycle Material', [validators.DataRequired()], choices=[('Paper', 'Paper'), ('Plastic', 'Plastic'), ('Metal', 'Metal')])
     weight = FloatField('Weight (gram/g)', [validators.NumberRange(min=1, max=100000), validators.DataRequired()])
@@ -77,6 +88,7 @@ class RecycleForm(Form):
     items = FieldList(
         FormField(RecycleItemForm), min_entries=1
     )
+
 
 
 @app.route('/')
@@ -149,6 +161,13 @@ def redeem():
 
     return render_template("redeem.html", our_items= our_items)
 
+
+@app.route('/Add-Redeem/<int:id>', methods=['GET', 'POST'])
+def add_redeem_item(id):
+    item_redeemed = Redeem.query.filter_by(id = id).first()
+
+    return render_template("redeemed.html", item_redeemed = item_redeemed)
+
 @app.route('/process1', methods=['GET', 'POST'])
 def process1():
 
@@ -185,8 +204,8 @@ def process3(id):
         store_point.append(point.calculate_points)
 
     total_point = "{:.0f}".format(sum(store_point))
-    print(total_point)
-    
+    if request.method == 'POST':
+        redirect(url_for('process1'))
     
     return render_template("MachineProcess/process3.html", recycled_items = recycled_items, i = i, total_point = total_point)
 

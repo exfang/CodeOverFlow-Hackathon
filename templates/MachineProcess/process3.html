@@ -23,21 +23,22 @@
     <div class="pr-2 pt-2 pl-2 rounded shadow mb-5">
         <table class="table">
             <thead class="thead-green">
-              <tr>
+              <tr class="text-center">
                 <th scope="col">Recycle Material</th>
-                <th scope="col">Weight</th>
+                <th scope="col">Weight(g)</th>
                 <th scope="col">Points Collected</th>
               </tr>
             </thead>
             <tbody>
               {% for recycled_item in recycled_items%}
-              <tr>
+              <tr class="text-center">
+              
                 <td>{{ recycled_item.material }}</td>
                 <td>{{ recycled_item.weight }}</td>
                 <td>{{ i(recycled_item.material, recycled_item.weight).calculate_points}}</td>
+              
               </tr>
-              {% endfor %}
-           
+              {% endfor%}
             </tbody>
           </table>
         </div>
