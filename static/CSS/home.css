@@ -65,13 +65,12 @@ h4{
 .article1{grid-area: art1;}
 .article2{ grid-area: art2; }
 .article3{grid-area: art3;}
-.article4{ grid-area: art4; }
 
 .articles{
     display: grid;
     grid-template-areas:
       'art1 art2'
-      'art3 art4';
+      'art3 art3';
     gap: 0px;
     grid-template-columns: 48% 48%;
     grid-template-rows: 50% 50%;
