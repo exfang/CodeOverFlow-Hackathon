@@ -129,13 +129,14 @@ def edit_message(id):
         db.session.commit()
         return redirect(url_for('home'))
     else:
+        user_messages = ContactUs.query.order_by(ContactUs.id)
         our_items = ContactUs.query.filter_by(id = id).first()
         update_contact_form.name.data = our_items.name
         update_contact_form.point_required.data = our_items.point_required
         update_contact_form.quantity_available.data = our_items.quantity_available
         update_contact_form.itemImage.data= our_items.itemImage
         
-    return render_template("editMessage.html", form = update_contact_form, our_items=our_items)
+    return render_template("editMessage.html", form = update_contact_form, user_messages=user_messages)
 
 
 # Rawtbhik Community Page
