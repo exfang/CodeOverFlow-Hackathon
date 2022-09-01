@@ -1,7 +1,3 @@
-import os
-from Aboutusform import AboutusForm
-from Aboutus import Aboutus
-
 import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g
 from pythonFiles.customer_accounts import Login, Register, Email, OTP, ResetPassword, UpdateDetail, CurrentPassword
@@ -9,6 +5,9 @@ from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 from random import *
+from Aboutusform import AboutusForm
+from Aboutus import Aboutus
+import os
 import pandas as pd
 import json
 
@@ -49,6 +48,18 @@ class Users(db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password, password)
 
+class Staffs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    account_type = db.Column(db.String(10), nullable=False)
+    name = db.Column(db.String(120), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    password = db.Column(db.String(), nullable=False)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password, password)
 
 
 class air_pollution_SG(db.Model):
@@ -66,7 +77,10 @@ class air_pollution_SG(db.Model):
             self.Nitrogen_Dioxide = argv[0][2]
             self.Particulate_Matter = argv[0][3]
             self.Carbon_Monoxide = argv[0][4]
+
+# Create all intialised table / model
 db.create_all()
+# Read csv for data manuplination
 df = pd.read_csv('M890641.csv')
 keep = ['Data Series','Sulphur Dioxide (Maximum 24-Hour Mean) (Microgram Per Cubic Metre)','Nitrogen Dioxide (Annual Mean) (Microgram Per Cubic Metre)',
 'Particulate Matter (PM10) (Annual Mean) (Microgram Per Cubic Metre)','Carbon Monoxide (Maximum 1-Hour Mean) (Milligram Per Cubic Metre)']
@@ -79,29 +93,14 @@ df.rename(columns={
     'Carbon Monoxide (Maximum 1-Hour Mean) (Milligram Per Cubic Metre)': 'Carbon_Monoxide',
     }, inplace=True)
 df1 = df.values.tolist()
-
+# Add into table
 for data in df1:
-    print(data[0])
     exitsted = air_pollution_SG.query.filter_by(Year = data[0]).first()
     if exitsted is None:
         db.session.add(air_pollution_SG(data))
         db.session.commit()
-    else:
-        print("Existsed")
-
-
-class Staffs(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    account_type = db.Column(db.String(10), nullable=False)
-    name = db.Column(db.String(120), nullable=False)
-    email = db.Column(db.String(120), nullable=False, unique=True)
-    password = db.Column(db.String(), nullable=False)
-
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
-
-    def verify_password(self, password):
-        return check_password_hash(self.password, password)
+    else: 
+        pass
 
 
 def auto_create_staff():
@@ -499,7 +498,7 @@ def staff_delete_accounts(id):
 def logout():
     session.clear()
     session['account_type'] = "Guest"
-    return render_template('home.html')
+    return redirect(url_for('home'))
 
 
 if __name__ == "__main__":
