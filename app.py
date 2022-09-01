@@ -135,7 +135,7 @@ def retrieve_contact():
     user_messages = ContactUs.query.order_by(ContactUs.id)
     return render_template("retrieveContact.html", user_messages = user_messages)
 
-@app.route('/DeleteContact/<int:id>')
+@app.route('/DeleteContact/<int:id>', methods=['GET', 'POST'])
 def delete_contact(id):
     user_messages = ContactUs.query.filter_by(id = id).first()
     try:
