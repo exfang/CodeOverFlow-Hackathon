@@ -107,9 +107,11 @@
                         <div class="form-group">
                             {{ render_field(form.remarks, class="form-control",placeholder="Enter Message ...") }}
                         </div>
+                        {% if session['account_type'] == "Staff" %}
                         <div class="form-group">
                             {{ render_field(form.replies, class="form-control",placeholder="Enter Message ...") }}
                         </div>
+                        {% endif %}
                         <div class="form-group form-check">
                         <label class="form-check-label">
                             <input class="form-check-input" type="checkbox" name="remember" required> I agree with the <a>Terms & Condition</a>

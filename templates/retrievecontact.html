@@ -2,14 +2,14 @@
 {% block title %}Library Loan System - Retrieve Contacts{% endblock %}
 
 {% block content %}
-
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/process.css')}}">
 
 
 <div class="container mt-3">
     <h1 class="pb-3">Available Messages</h1>
 
   <table class="table table-dark table-striped table-hover">
-    <thead>
+    <thead class="thead-green">
       <tr>
         <th>Question ID</th>
         <th>Name</th>
@@ -42,4 +42,7 @@
     </tbody>
   </table>
 </div>
+{% endblock %}
+
+{% block footer %}
 {% endblock %}

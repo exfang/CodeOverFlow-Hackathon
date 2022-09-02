@@ -18,9 +18,10 @@
           <img class="img-fluid fit-image" src="{{url_for('static', filename='IMAGE/' + our_item.itemImage )}}" class="card-img-top" alt="...">
           <div class="card-body">
             <h5 class="card-title">{{our_item.name}}</h5>
+            <h6 class="card-title"> Point Required: {{our_item.point_required}}</h6>
           </div>
           <!-- <button class="btn btn-primary btn-green btn-outline-light w-100">Redeem</button> -->
-          <a href="{{ url_for('add_redeem_item', id=our_item.id)}}" class="text-center btn btn-primary btn-green btn-outline-light w-100">Redeem</a>
+          <a href="{{ url_for('add_redeem_item', id=our_item.id)}}" class="text-center btn btn-primary btn-green outline-green w-100">Redeem</a>
             {% if session['account_type'] == "Staff" %}
               <a href="{{ url_for('update_redeem_item', id=our_item.id)}}" class="text-center btn-sm btn-dark w-100">
                 Edit
