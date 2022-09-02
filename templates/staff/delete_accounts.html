@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='CSS/base.css') }}">{% endblock %}
+{% block title %}Delete Customer Account{% endblock %}
+
+{% block content %}
+<div class="cs_sidebar">
+    <a href="/account_detail">Account Details</a>
+    <a href="/Redeem">Manage Redemption Items</a>
+    <a class="active" href="/delete_customer_accounts">Manage Customer Accounts</a>
+    <a type="button" class="logout_btn" data-toggle="modal" data-target="#staff_logout">Log Out</a>
+    <!-- The Modal -->
+    <div class="modal" id="staff_logout">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="staff-modal-title">Log Out</h4>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Are you sure you want to log out?
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <a href="/logout" class="btn btn-secondary logout_model_button">Log Out</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if 'account_deleted' in session %}
+    <div class="alert updated_design">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h3>{{ session.pop('account_deleted', None) }}</h3>
+    </div>
+{% endif %}
+
+<div class='customer_history' style="min-height: 450px;">
+    <h1>Customer Accounts</h1>
+
+    <div class="history_table">
+        <table class="table table-striped">
+            <thead class="table_head">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th style="width: 20%;">Points Obtained</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr class="table_row">
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.points }}</td>
+                    <td>
+                        <form action="{{url_for('staff_delete_accounts', id=user.id)}}" method="POST">
+                        <div class="modal_div">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target='#myModal_{{ user.id }}'>
+                            Delete Account
+                        </button>
+                        <div class="modal" id='myModal_{{ user.id }}'>
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="staff-modal-title">Delete Confirmation</h4>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        Are you sure you want to delete {{user.name}}'s account?
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <input type="submit" value="Delete" class="staff_delete_button btn btn-danger">
+                                        <button type="button" class="staff_delete_button btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+    </div>
+</div>
+
+{% endblock %}

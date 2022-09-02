@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Library Loan System - About Us{% endblock %}
+
+{% block head %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Freelancer - Start Bootstrap Theme</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    
+{% endblock %}
+
+
+
+{% block content %}
+{% from "_formhelper.html" import render_field  %}
+
+<body id="page-top">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 align-items-center my-5">
+            <div><img class="img-fluid rounded mb-4 mb-lg-0" src="https://hsp.arizona.edu/sites/hsp.arizona.edu/files/ClimateChange2019_words_0.jpg" alt="..." /></div>
+        </div>
+    </div>
+    <!-- About Section-->
+    <section class="page-section bg-info text-white mb-0 " id="about">
+        <div class="container">
+            <!-- About Section Heading-->
+            <br>
+            <br>
+            <h2 class="page-section-heading text-center text-black">About</h2>
+            <!-- Icon Divider-->
+            <div class="divider-custom divider-light">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon">
+                <div class="divider-custom-line"></div>
+            </div>
+            <!-- About Section Content-->
+            <div class="row">
+
+                <div class="col-lg-4 ms-auto"><p class="lead">CC is a non-profit organization focused on promoting and enhancing recycling in Singapore. Our network of more than 600 members extends across waste reduction, reuse, recycling, and composting. Together, let's recycle.</p></div>
+                <div class="col-lg-4 me-auto"><p class="lead"><strong>Vision:</strong> Waste reduction and sound management practices for raw materials in Singapore lead to an environmentally sustainable economy.</p></div>
+                <div class="col-lg-4 me-auto"><p class="lead"><strong>Mission:</strong> The Mission of the National Recycling Coalition is to partner with and facilitate activities between and among non-profit organizations (NGO’s), businesses, trade associations, individuals and government to maintain a prosperous and productive Singapore recycling system that is committed to the conservation of natural resources!</p></div>
+                
+            </div>
+            
+        </div>
+        <br>
+    </section>
+    <br>
+    <br>
+     <!-- About section-->
+     <section id="about">
+        <div class="container px-4">
+            <div class="row gx-4 justify-content-center">
+                <div class="col-lg-8">
+                    <h2>Who are we?</h2>
+                    <p class="lead">CC is a non-profit organization that is focused on the promotion and enhancement of recycling in the Singapore.
+                         We are 3-affiliated recycling organizations strong, and have a network of more than 6,000 members that extends across waste reduction, reuse, recycling, and composting. 
+                         The organization works to maintain a prosperous and productive recycling system that is committed to the conservation of natural resources, 
+                         as well as accelerate sustainable approaches to the management of discarded materials.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <br>
+  
+    <!-- Services section-->
+    <section class="bg-info text-white " id="services">
+        <div class="container px-4">
+            <div class="row gx-4 justify-content-center">
+                <div class="col-lg-8">
+                    <h2><br>What do we offer?</h2>
+                    <p class="lead">The Coalition represents and advocates for every sector of the recycling industry across the country. 
+                    </p>
+                <ul>
+                    <li>We are the voice for our membership. </li>
+                    <li>We provide our members with the tools and resources they need to convey to their community members, decision makers, and the news media the important benefits that recycling provides to our economy and environment. </li>
+                    <li>We also develop meaningful partnerships with corporate, government, and nonprofit leaders to bring about important changes in the way we use, manage, and recycle natural resources.</li>
+                </ul><br></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <br>
+   <!-- Contact section-->
+   <section id="Contact">
+    <div class="container px-4">
+        <div class="row gx-4 justify-content-center">
+            <div class="col-lg-8">
+                <h2>Contact Us</h2>
+                <p class="lead">Let's keep in touch! You could <strong>do this form to post a question on our FAQ section</strong> too! We will be back as soon as possible with an answer you best require.</p>
+                    <form action="" method="POST">
+                        <div class="form-group">
+                            {{ render_field(form.name, class="form-control",placeholder="Enter Name") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.email, class="form-control",placeholder="Enter Email") }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.remarks, class="form-control",placeholder="Enter Message ...") }}
+                        </div>
+                        {% if session['account_type'] == "Staff" %}
+                        <div class="form-group">
+                            {{ render_field(form.replies, class="form-control",placeholder="Enter Message ...") }}
+                        </div>
+                        {% endif %}
+                        <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="remember" required> I agree with the <a>Terms & Condition</a>
+                        </label>
+                        </div>
+                        <input type="submit" value="Submit" class="btn btn-info">
+                       
+                    </form>
+                    <br>
+                </div>                                 
+            </div>
+        </div>
+    </div>
+</section>
+  
+           
+                
+    
+</body>
+</html>
+{% endblock %}

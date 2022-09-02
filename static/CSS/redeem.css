@@ -9,3 +9,16 @@
     object-fit:cover;
     border-radius: 5px;
 }
+
+.fit-image{
+    width:100%;
+    height:200px;
+    object-fit:cover;
+    border-radius: 5px;
+}
+
+.outline-green:hover{
+    background-color:white;
+    border-color:#00917C;
+    color: #00917C;
+}
